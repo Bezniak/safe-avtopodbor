@@ -28,19 +28,32 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden pt-16 sm:pt-20 md:pt-24">
+    <section className="relative h-screen md:min-h-screen flex items-center justify-center bg-black overflow-hidden pt-16 sm:pt-20 md:pt-24">
       {/* Фоновое изображение с элегантным параллаксом */}
       <div className="absolute inset-0">
+        {/* На мобильных - плавающая анимация */}
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="md:hidden absolute inset-0 bg-center"
+          style={{
+            backgroundImage: 'url(/000-144.jpg)',
+            backgroundSize: 'auto 100%',
+            backgroundRepeat: 'no-repeat',
+            animation: 'slideBackground 30s ease-in-out infinite',
+          }}
+        ></div>
+
+        {/* На десктопе - параллакс эффект */}
+        <div
+          className="hidden md:block absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage: 'url(/000-144.jpg)',
             transform: `translate(${mousePosition.x * 0.3}px, ${mousePosition.y * 0.3}px) scale(1.05)`,
             transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         ></div>
-        {/* Адаптивный градиент: светлее на мобильных, чуть темнее на десктопе */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 md:from-black/75 md:via-black/45 md:to-black/85"></div>
+
+        {/* Легкое затемнение на мобильных, более темное на десктопе */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40 md:from-black/75 md:via-black/45 md:to-black/85"></div>
 
         {/* Тонкий светящийся акцент */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 bg-gradient-to-r from-transparent via-red-600 to-transparent opacity-50"></div>
@@ -65,10 +78,11 @@ const Hero = () => {
       </div>
 
       {/* Основной контент */}
-      <div className="container mx-auto px-2 sm:px-4 relative z-10">
+      <div className="container mx-auto px-2 sm:px-4 relative z-10 h-full flex flex-col justify-between md:block md:h-auto">
+        {/* Заголовок вверху */}
         <div className="max-w-6xl mx-auto">
-          {/* Логотип с утонченным эффектом */}
-          <div className={`flex justify-center mb-6 sm:mb-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
+          {/* Логотип с утонченным эффектом - скрыт на мобильных */}
+          <div className={`hidden md:flex justify-center mb-6 sm:mb-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
             <div
               className="relative"
               style={{
@@ -90,7 +104,7 @@ const Hero = () => {
 
 
           {/* Стильный заголовок */}
-          <div className={`text-center mb-8 sm:mb-12 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`text-center mb-0 md:mb-8 sm:md:mb-12 pt-8 md:pt-0 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-2 sm:mb-3 tracking-tight">
               <span className="block mb-1 sm:mb-2">Безопасный</span>
               <span className="block bg-gradient-to-r from-red-600 via-red-500 to-red-600 bg-clip-text text-transparent">
@@ -103,8 +117,8 @@ const Hero = () => {
             <div className="w-12 sm:w-16 h-0.5 bg-red-600 mx-auto mt-4 sm:mt-6"></div>
           </div>
 
-          {/* Минималистичные карточки преимуществ */}
-          <div className={`grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-6 mb-8 sm:mb-12 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          {/* Минималистичные карточки преимуществ - скрыты на мобильных */}
+          <div className={`hidden md:grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-6 mb-8 sm:mb-12 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             {[
               { number: `${yearsInBusiness}+`, text: 'Лет опыта', subtext: 'На рынке' },
               { number: '3', text: 'Вида гарантии', subtext: 'На услуги' },
@@ -129,9 +143,12 @@ const Hero = () => {
               </div>
             ))}
           </div>
+        </div>
 
+        {/* Кнопки внизу */}
+        <div className="max-w-6xl mx-auto w-full">
           {/* Элегантные кнопки */}
-          <div className={`flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center mb-6 sm:mb-8 px-2 transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center pb-8 md:pb-0 md:mb-6 sm:md:mb-8 px-2 transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <Link
               to="/form"
               className="group relative px-6 py-3 sm:px-10 sm:py-4 bg-red-600 text-white text-sm sm:text-base font-semibold rounded-md overflow-hidden hover:bg-red-700 transition-all duration-300 hover:shadow-lg hover:shadow-red-600/50 cursor-pointer"
@@ -158,8 +175,8 @@ const Hero = () => {
             </button>
           </div>
 
-          {/* Тонкий бейдж внизу */}
-          <div className={`text-center transition-all duration-1000 delay-800 px-2 mb-16 sm:mb-20 md:mb-24 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
+          {/* Тонкий бейдж внизу - скрыт на мобильных */}
+          <div className={`hidden md:block text-center transition-all duration-1000 delay-800 px-2 mb-16 sm:mb-20 md:mb-24 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
             <div className="inline-flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-400 md:text-gray-400 flex-wrap justify-center">
               <span className="flex items-center gap-1">
                 <svg className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20">
@@ -186,10 +203,10 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Элегантная стрелка вниз */}
+      {/* Элегантная стрелка вниз - скрыта на мобильных */}
       <button
         onClick={() => scrollToSection('about')}
-        className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 group cursor-pointer z-20 pointer-events-auto"
+        className="hidden md:block absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 group cursor-pointer z-20 pointer-events-auto"
         aria-label="Прокрутить к следующей секции"
       >
         <div className="relative">
@@ -241,6 +258,18 @@ const Hero = () => {
           }
           50% {
             transform: translateY(-8px);
+          }
+        }
+
+        @keyframes slideBackground {
+          0% {
+            background-position: left center;
+          }
+          50% {
+            background-position: right center;
+          }
+          100% {
+            background-position: left center;
           }
         }
       `}</style>
