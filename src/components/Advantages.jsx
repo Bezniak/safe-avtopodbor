@@ -68,11 +68,11 @@ const Advantages = () => {
   ];
 
   return (
-    <section id="advantages" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-b from-black via-gray-900 to-black relative overflow-hidden">
+    <section id="advantages" className="pt-10 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-b from-black via-gray-900 to-black relative overflow-hidden">
       {/* Фоновые элементы */}
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 right-20 w-96 h-96 bg-red-600 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 left-20 w-96 h-96 bg-red-800 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 right-20 w-96 h-96 rounded-full blur-3xl" style={{ backgroundColor: 'var(--primary)' }}></div>
+        <div className="absolute bottom-20 left-20 w-96 h-96 rounded-full blur-3xl" style={{ backgroundColor: 'var(--primary-dark)' }}></div>
       </div>
 
       <div className="container mx-auto px-2 sm:px-4 relative z-10">
@@ -80,14 +80,14 @@ const Advantages = () => {
         <div className="text-center mb-12 sm:mb-16 md:mb-20">
           <p className="text-red-600 text-xs sm:text-sm font-semibold tracking-widest uppercase mb-3 sm:mb-4">Преимущества</p>
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 tracking-tight px-2">
-            Почему выбирают <span className="bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent">нас</span>
+            Почему выбирают <span className="bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(to right, var(--primary), var(--primary-light))' }}>нас</span>
           </h2>
           <div className="flex items-center justify-center gap-1 sm:gap-2 mt-4 sm:mt-6">
-            <div className="w-8 sm:w-12 h-px bg-gradient-to-r from-transparent to-red-600"></div>
+            <div className="w-8 sm:w-12 h-px" style={{ background: 'linear-gradient(to right, transparent, var(--primary))' }}></div>
             <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-600 rounded-full"></div>
             <div className="w-16 sm:w-24 h-px bg-red-600"></div>
             <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-600 rounded-full"></div>
-            <div className="w-8 sm:w-12 h-px bg-gradient-to-l from-transparent to-red-600"></div>
+            <div className="w-8 sm:w-12 h-px" style={{ background: 'linear-gradient(to left, transparent, var(--primary))' }}></div>
           </div>
           <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto mt-4 sm:mt-6 md:mt-8 leading-relaxed px-4">
             6 причин доверить подбор автомобиля профессионалам
@@ -104,25 +104,25 @@ const Advantages = () => {
               onMouseLeave={() => setHoveredIndex(null)}
             >
               {/* Свечение при hover */}
-              <div className={`absolute -inset-0.5 bg-gradient-to-r from-red-600 to-red-800 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-500`}></div>
+              <div className="absolute -inset-0.5 rounded-2xl blur opacity-0 group-hover:opacity-30 transition-opacity duration-500" style={{ background: 'linear-gradient(to right, var(--primary), var(--primary-dark))' }}></div>
 
               {/* Карточка */}
-              <div className="relative bg-black/60 backdrop-blur-sm border border-gray-800/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 h-full group-hover:border-red-600/50 transition-all duration-500 overflow-hidden">
+              <div className="relative bg-black/60 backdrop-blur-sm border border-gray-800/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 h-full transition-all duration-500 overflow-hidden" onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(var(--primary-rgb), 0.5)'} onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(31, 41, 55, 0.5)'}>
                 {/* Декоративная линия сверху */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-red-600 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute top-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(to right, transparent, var(--primary), transparent)' }}></div>
 
                 {/* Иконка и номер */}
                 <div className="flex items-start justify-between mb-4 sm:mb-6">
                   <div className="text-red-600 transform group-hover:scale-110 transition-transform duration-500 [&>svg]:w-8 [&>svg]:h-8 sm:[&>svg]:w-10 sm:[&>svg]:h-10 md:[&>svg]:w-12 md:[&>svg]:h-12">
                     {advantage.icon}
                   </div>
-                  <span className="text-5xl sm:text-6xl md:text-7xl font-bold bg-gradient-to-br from-red-600/20 to-transparent bg-clip-text text-transparent group-hover:from-red-600/40 transition-all duration-500">
+                  <span className="text-5xl sm:text-6xl md:text-7xl font-bold bg-clip-text text-transparent transition-all duration-500" style={{ backgroundImage: hoveredIndex === index ? 'linear-gradient(to bottom right, rgba(var(--primary-rgb), 0.4), transparent)' : 'linear-gradient(to bottom right, rgba(var(--primary-rgb), 0.2), transparent)' }}>
                     {advantage.number}
                   </span>
                 </div>
 
                 {/* Заголовок */}
-                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 md:mb-4 group-hover:text-red-600 transition-colors duration-300">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 md:mb-4 transition-colors duration-300" style={{ color: hoveredIndex === index ? 'var(--primary)' : 'white' }}>
                   {advantage.title}
                 </h3>
 
@@ -132,7 +132,7 @@ const Advantages = () => {
                 </p>
 
                 {/* Декоративный элемент */}
-                <div className="absolute bottom-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-tl from-red-600/5 to-transparent rounded-tl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute bottom-0 right-0 w-24 h-24 sm:w-32 sm:h-32 rounded-tl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(to top left, rgba(var(--primary-rgb), 0.05), transparent)' }}></div>
               </div>
             </div>
           ))}
@@ -140,7 +140,7 @@ const Advantages = () => {
 
         {/* Элегантный CTA блок */}
         <div className="relative group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-red-600 via-red-500 to-red-600 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+          <div className="absolute -inset-1 rounded-2xl blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500" style={{ background: 'linear-gradient(to right, var(--primary), var(--primary-light), var(--primary))' }}></div>
           <div className="relative bg-gradient-to-br from-gray-900/90 to-black/90 backdrop-blur-sm border border-gray-800/50 rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-10 lg:p-14">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8">
               <div className="flex-1 text-center md:text-left">
@@ -154,7 +154,8 @@ const Advantages = () => {
               <div className="flex-shrink-0 w-full md:w-auto">
                 <Link
                   to="/form"
-                  className="group/btn relative px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 bg-red-600 hover:bg-red-700 text-white rounded-lg md:rounded-xl text-sm sm:text-base md:text-lg font-semibold transition-all transform hover:scale-105 shadow-2xl shadow-red-600/50 overflow-hidden cursor-pointer inline-flex w-full md:w-auto justify-center"
+                  className="group/btn relative px-6 py-3 sm:px-8 sm:py-4 md:px-10 md:py-5 bg-red-600 hover:bg-red-700 text-white rounded-lg md:rounded-xl text-sm sm:text-base md:text-lg font-semibold transition-all transform hover:scale-105 overflow-hidden cursor-pointer inline-flex w-full md:w-auto justify-center"
+                  style={{ boxShadow: '0 25px 50px -12px rgba(var(--primary-rgb), 0.5)' }}
                 >
                   <span className="relative z-10 flex items-center gap-2">
                     Получить консультацию

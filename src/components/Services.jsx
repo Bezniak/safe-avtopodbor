@@ -1,9 +1,65 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+  const [savedScrollPosition, setSavedScrollPosition] = useState(0);
   const navigate = useNavigate();
+
+  // Минимальное расстояние свайпа для закрытия (в пикселях)
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    setTouchEnd(0); // Сбрасываем при новом касании
+    setTouchStart(e.targetTouches[0].clientY);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientY);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isDownSwipe = distance < -minSwipeDistance;
+
+    if (isDownSwipe) {
+      setSelectedService(null);
+    }
+  };
+
+  // Блокировка скролла страницы когда открыт попап
+  useEffect(() => {
+    if (selectedService) {
+      // Сохраняем текущую позицию скролла
+      const scrollY = window.scrollY;
+      setSavedScrollPosition(scrollY);
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflowY = 'scroll'; // Сохраняем место для скроллбара
+    } else if (savedScrollPosition !== null) {
+      // Восстанавливаем скролл при закрытии
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflowY = '';
+      window.scrollTo(0, savedScrollPosition);
+    }
+
+    // Cleanup при размонтировании компонента
+    return () => {
+      if (!selectedService) {
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflowY = '';
+      }
+    };
+  }, [selectedService]);
 
   const services = [
     {
@@ -98,27 +154,6 @@ const Services = () => {
     {
       icon: (
         <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-          <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-        </svg>
-      ),
-      title: "Эндоскопия двигателя",
-      price: "входит в диагностику",
-      shortDescription: "Осмотр внутренних частей двигателя",
-      fullDescription: "Проверка внутреннего состояния двигателя с помощью эндоскопа",
-      includes: [
-        "Осмотр цилиндров двигателя",
-        "Проверка состояния поршней",
-        "Осмотр клапанов",
-        "Выявление задиров и износа",
-        "Проверка на утечки масла",
-        "Фото и видео фиксация",
-        "Заключение о состоянии"
-      ]
-    },
-    {
-      icon: (
-        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
           <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
         </svg>
       ),
@@ -142,30 +177,30 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-b from-black to-gray-900">
+    <section id="services" className="pt-2 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-b from-black to-gray-900">
       <div className="container mx-auto px-4">
         {/* Заголовок секции */}
         <div className="text-center mb-16">
-          <p className="text-red-600 text-sm font-semibold tracking-widest uppercase mb-4">Услуги</p>
+          <p className="text-[var(--primary)] text-sm font-semibold tracking-widest uppercase mb-4">Услуги</p>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Что мы <span className="text-red-600">проверяем</span>
+            Что мы <span className="text-[var(--primary)]">проверяем</span>
           </h2>
-          <div className="w-20 h-1 bg-red-600 mx-auto mb-6"></div>
+          <div className="w-20 h-1 bg-[var(--primary)] mx-auto mb-6"></div>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
             Комплексная проверка автомобиля по всем важным параметрам
           </p>
         </div>
 
         {/* Сетка услуг */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          {services.slice(0, 3).map((service, index) => (
             <div
               key={index}
               onClick={() => setSelectedService(service)}
-              className="group p-8 bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-xl hover:border-red-600 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:shadow-red-600/20 cursor-pointer"
+              className="group p-8 bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-xl hover:border-[var(--primary)] transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:shadow-[rgba(var(--primary-rgb),0.2)] cursor-pointer flex flex-col h-full"
             >
               {/* Иконка */}
-              <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 bg-[var(--primary)] rounded-full flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
                 {service.icon}
               </div>
 
@@ -175,17 +210,56 @@ const Services = () => {
               </h3>
 
               {/* Цена */}
-              <p className="text-2xl font-bold text-red-600 mb-4">
+              <p className="text-2xl font-bold text-[var(--primary)] mb-4">
                 {service.price}
               </p>
 
               {/* Краткое описание */}
-              <p className="text-gray-400 leading-relaxed mb-4">
+              <p className="text-gray-400 leading-relaxed mb-4 flex-grow">
                 {service.shortDescription}
               </p>
 
               {/* Кнопка подробнее */}
-              <div className="flex items-center text-red-600 font-semibold group-hover:gap-2 transition-all">
+              <div className="flex items-center text-[var(--primary)] font-semibold group-hover:gap-2 transition-all mt-auto">
+                Подробнее
+                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Две нижние карточки по центру */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-8">
+          {services.slice(3, 5).map((service, index) => (
+            <div
+              key={index}
+              onClick={() => setSelectedService(service)}
+              className="group p-8 bg-gradient-to-br from-gray-900 to-black border border-gray-800 rounded-xl hover:border-[var(--primary)] transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:shadow-[rgba(var(--primary-rgb),0.2)] cursor-pointer flex flex-col h-full"
+            >
+              {/* Иконка */}
+              <div className="w-16 h-16 bg-[var(--primary)] rounded-full flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
+                {service.icon}
+              </div>
+
+              {/* Название */}
+              <h3 className="text-2xl font-bold text-white mb-3">
+                {service.title}
+              </h3>
+
+              {/* Цена */}
+              <p className="text-2xl font-bold text-[var(--primary)] mb-4">
+                {service.price}
+              </p>
+
+              {/* Краткое описание */}
+              <p className="text-gray-400 leading-relaxed mb-4 flex-grow">
+                {service.shortDescription}
+              </p>
+
+              {/* Кнопка подробнее */}
+              <div className="flex items-center text-[var(--primary)] font-semibold group-hover:gap-2 transition-all mt-auto">
                 Подробнее
                 <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -199,40 +273,40 @@ const Services = () => {
         <div className="mt-20 relative">
           {/* Декоративный фон */}
           <div className="absolute inset-0 flex items-center justify-center opacity-10">
-            <div className="w-96 h-96 bg-red-600 rounded-full blur-3xl"></div>
+            <div className="w-96 h-96 bg-[var(--primary)] rounded-full blur-3xl"></div>
           </div>
 
           <div className="relative max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Быстро */}
-              <div className="group flex items-center gap-4 bg-gradient-to-br from-red-600/10 via-black to-black border border-red-600/30 hover:border-red-600 rounded-2xl px-6 py-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-red-600/20">
-                <div className="flex-shrink-0 w-14 h-14 bg-red-600/20 group-hover:bg-red-600/30 rounded-full flex items-center justify-center transition-all">
+              <div className="group flex items-center gap-4 bg-gradient-to-br from-[rgba(var(--primary-rgb),0.1)] via-black to-black border border-[rgba(var(--primary-rgb),0.3)] hover:border-[var(--primary)] rounded-2xl px-6 py-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-[rgba(var(--primary-rgb),0.2)]">
+                <div className="flex-shrink-0 w-14 h-14 bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 rounded-full flex items-center justify-center transition-all">
                   <span className="text-3xl group-hover:scale-110 transition-transform">⚡</span>
                 </div>
                 <div>
-                  <p className="text-white font-bold text-lg mb-1 group-hover:text-red-500 transition-colors">Быстро</p>
+                  <p className="text-white font-bold text-lg mb-1 group-hover:text-[var(--primary-light)] transition-colors">Быстро</p>
                   <p className="text-gray-400 text-sm">Услуги в день обращения</p>
                 </div>
               </div>
 
               {/* Отчет */}
-              <div className="group flex items-center gap-4 bg-gradient-to-br from-red-600/10 via-black to-black border border-red-600/30 hover:border-red-600 rounded-2xl px-6 py-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-red-600/20">
-                <div className="flex-shrink-0 w-14 h-14 bg-red-600/20 group-hover:bg-red-600/30 rounded-full flex items-center justify-center transition-all">
+              <div className="group flex items-center gap-4 bg-gradient-to-br from-[rgba(var(--primary-rgb),0.1)] via-black to-black border border-[rgba(var(--primary-rgb),0.3)] hover:border-[var(--primary)] rounded-2xl px-6 py-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-[rgba(var(--primary-rgb),0.2)]">
+                <div className="flex-shrink-0 w-14 h-14 bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 rounded-full flex items-center justify-center transition-all">
                   <span className="text-3xl group-hover:scale-110 transition-transform">📋</span>
                 </div>
                 <div>
-                  <p className="text-white font-bold text-lg mb-1 group-hover:text-red-500 transition-colors">Отчет</p>
+                  <p className="text-white font-bold text-lg mb-1 group-hover:text-[var(--primary-light)] transition-colors">Отчет</p>
                   <p className="text-gray-400 text-sm">Полный детальный осмотр</p>
                 </div>
               </div>
 
               {/* Гарантия */}
-              <div className="group flex items-center gap-4 bg-gradient-to-br from-red-600/10 via-black to-black border border-red-600/30 hover:border-red-600 rounded-2xl px-6 py-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-red-600/20">
-                <div className="flex-shrink-0 w-14 h-14 bg-red-600/20 group-hover:bg-red-600/30 rounded-full flex items-center justify-center transition-all">
+              <div className="group flex items-center gap-4 bg-gradient-to-br from-[rgba(var(--primary-rgb),0.1)] via-black to-black border border-[rgba(var(--primary-rgb),0.3)] hover:border-[var(--primary)] rounded-2xl px-6 py-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-[rgba(var(--primary-rgb),0.2)]">
+                <div className="flex-shrink-0 w-14 h-14 bg-[var(--primary)]/20 group-hover:bg-[var(--primary)]/30 rounded-full flex items-center justify-center transition-all">
                   <span className="text-3xl group-hover:scale-110 transition-transform">🛡️</span>
                 </div>
                 <div>
-                  <p className="text-white font-bold text-lg mb-1 group-hover:text-red-500 transition-colors">Гарантия</p>
+                  <p className="text-white font-bold text-lg mb-1 group-hover:text-[var(--primary-light)] transition-colors">Гарантия</p>
                   <p className="text-gray-400 text-sm">На все услуги</p>
                 </div>
               </div>
@@ -244,67 +318,73 @@ const Services = () => {
       {/* Модальное окно с подробной информацией */}
       {selectedService && (
         <div
-          className="fixed inset-0 bg-black/95 z-[100] flex items-center justify-center p-2 md:p-4 overflow-y-auto"
+          className="fixed inset-0 bg-black/95 z-[100] flex items-end md:items-center justify-center p-0 md:p-4"
           onClick={() => setSelectedService(null)}
         >
           <div
-            className="bg-gradient-to-br from-gray-900 to-black border-2 border-red-600/50 rounded-xl md:rounded-2xl max-w-3xl w-full my-4 md:my-8 relative animate-scaleIn max-h-[95vh] overflow-y-auto"
+            className="bg-gradient-to-br from-gray-900 to-black border-t-2 md:border-2 border-[rgba(var(--primary-rgb),0.5)] rounded-t-3xl md:rounded-2xl max-w-3xl w-full md:my-8 relative animate-slideUp md:animate-scaleIn flex flex-col max-h-[85vh] md:max-h-[95vh]"
             onClick={(e) => e.stopPropagation()}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
           >
-            {/* Кнопка закрытия */}
-            <button
+            {/* Кнопка закрытия / Ручка для свайпа */}
+            <div
+              className="flex-shrink-0 md:absolute md:top-4 md:right-4 w-full md:w-auto flex justify-center md:justify-end py-3 md:py-0 text-white transition-colors z-10 bg-gray-900/80 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none cursor-pointer"
               onClick={() => setSelectedService(null)}
-              className="absolute top-2 md:top-4 right-2 md:right-4 text-white hover:text-red-600 transition-colors cursor-pointer z-10 bg-black/50 md:bg-transparent rounded-full p-1"
             >
-              <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-16 h-1.5 md:w-auto md:h-auto bg-gray-600 md:bg-transparent rounded-full md:rounded-none"></div>
+              <svg className="hidden md:block w-8 h-8 hover:text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
-            </button>
+            </div>
 
-            {/* Контент */}
-            <div className="p-4 md:p-8 lg:p-12">
+            {/* Контент с прокруткой */}
+            <div className="flex-1 overflow-y-auto p-5 md:p-8 lg:p-12 pt-4 md:pt-8">
               {/* Иконка и заголовок */}
-              <div className="flex items-start gap-3 md:gap-6 mb-4 md:mb-6">
-                <div className="w-14 h-14 md:w-20 md:h-20 bg-red-600 rounded-full flex items-center justify-center text-white flex-shrink-0">
+              <div className="flex items-start gap-3 md:gap-6 mb-4 md:mb-6 mt-2">
+                <div className="w-10 h-10 md:w-20 md:h-20 bg-[var(--primary)] rounded-full flex items-center justify-center text-white flex-shrink-0">
                   {selectedService.icon}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-xl md:text-3xl lg:text-4xl font-bold text-white mb-2 md:mb-3 pr-8 md:pr-0">
+                  <h3 className="text-base md:text-3xl lg:text-4xl font-bold text-white mb-1 md:mb-3 leading-tight">
                     {selectedService.title}
                   </h3>
-                  <p className="text-xl md:text-2xl lg:text-3xl font-bold text-red-600">
+                  <p className="text-base md:text-2xl lg:text-3xl font-bold text-[var(--primary)]">
                     {selectedService.price}
                   </p>
                 </div>
               </div>
 
               {/* Описание */}
-              <p className="text-base md:text-lg lg:text-xl text-gray-300 mb-6 md:mb-8">
+              <p className="text-xs md:text-lg lg:text-xl text-gray-300 mb-4 md:mb-8 leading-relaxed">
                 {selectedService.fullDescription}
               </p>
 
               {/* Что входит */}
-              <div className="mb-6 md:mb-8">
-                <h4 className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-4 md:mb-6">Что входит в услугу:</h4>
+              <div className="mb-4 md:mb-8">
+                <h4 className="text-sm md:text-xl lg:text-2xl font-bold text-white mb-3 md:mb-6">Что входит в услугу:</h4>
                 <div className="grid grid-cols-1 gap-2 md:gap-3">
                   {selectedService.includes.map((item, index) => (
                     <div key={index} className="flex items-start gap-2 md:gap-3">
-                      <svg className="w-5 h-5 md:w-6 md:h-6 text-red-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-4 h-4 md:w-6 md:h-6 text-[var(--primary)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                       </svg>
-                      <span className="text-gray-300 text-sm md:text-base lg:text-lg">{item}</span>
+                      <span className="text-gray-300 text-xs md:text-base lg:text-lg leading-relaxed">{item}</span>
                     </div>
                   ))}
                 </div>
               </div>
+            </div>
 
-              {/* Кнопка заказа */}
+            {/* Кнопка заказа - зафиксирована внизу */}
+            <div className="flex-shrink-0 p-5 md:p-8 lg:p-12 pt-0 md:pt-0 bg-gradient-to-t from-gray-900 to-transparent">
               <button
                 onClick={() => {
                   navigate(`/form?service=${encodeURIComponent(selectedService.title)}&price=${encodeURIComponent(selectedService.price)}`);
                   setSelectedService(null);
                 }}
-                className="w-full bg-red-600 hover:bg-red-700 text-white py-3 md:py-4 rounded-lg md:rounded-xl text-base md:text-lg font-semibold transition-all transform hover:scale-105 shadow-lg shadow-red-600/50 cursor-pointer"
+                className="w-full bg-[var(--primary)] hover:bg-[var(--primary-dark)] active:bg-[var(--primary-darker)] text-white py-3 md:py-4 rounded-xl md:rounded-xl text-sm md:text-lg font-semibold transition-all transform active:scale-95 md:hover:scale-105 shadow-lg shadow-[rgba(var(--primary-rgb),0.5)] cursor-pointer"
               >
                 Заказать услугу
               </button>
@@ -326,8 +406,21 @@ const Services = () => {
           }
         }
 
+        @keyframes slideUp {
+          from {
+            transform: translateY(100%);
+          }
+          to {
+            transform: translateY(0);
+          }
+        }
+
         .animate-scaleIn {
           animation: scaleIn 0.3s ease-out;
+        }
+
+        .animate-slideUp {
+          animation: slideUp 0.3s ease-out;
         }
       `}</style>
     </section>

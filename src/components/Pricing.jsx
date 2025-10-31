@@ -14,7 +14,7 @@ const Pricing = () => {
         "Компьютерная диагностика",
         "Проверка кузова толщиномером",
         "Детальный осмотр двигателя",
-        "Эндоскопия двигателя",
+        "Проверка автомобиля в сервисе по договоренности",
         "Тест-драйв",
         "Проверка пробега",
         "Полный отчет с рекомендациями"
@@ -58,14 +58,14 @@ const Pricing = () => {
   };
 
   return (
-    <section id="pricing" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-black">
+    <section id="pricing" className="pt-12 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-black">
       <div className="container mx-auto px-2 sm:px-4">
         {/* Заголовок секции */}
         <div className="text-center mb-10 sm:mb-12 md:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 px-2">
-            Наши <span className="text-red-600">тарифы</span>
+            Наши <span style={{ color: 'var(--primary)' }}>тарифы</span>
           </h2>
-          <div className="w-16 sm:w-20 h-1 bg-red-600 mx-auto mb-4 sm:mb-6"></div>
+          <div className="w-16 sm:w-20 h-1 mx-auto mb-4 sm:mb-6" style={{ backgroundColor: 'var(--primary)' }}></div>
           <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto px-4">
             Выберите подходящий вариант для подбора вашего автомобиля
           </p>
@@ -76,15 +76,23 @@ const Pricing = () => {
           {plans.map((plan, index) => (
             <div
               key={index}
-              className={`relative bg-gradient-to-br from-gray-900 to-black rounded-xl overflow-hidden transition-all duration-300 transform hover:-translate-y-2 flex flex-col ${
-                plan.popular
-                  ? 'border-2 border-red-600 shadow-xl shadow-red-600/20'
-                  : 'border border-gray-800 hover:border-red-600'
-              }`}
+              className="relative bg-gradient-to-br from-gray-900 to-black rounded-xl overflow-hidden transition-all duration-300 transform hover:-translate-y-2 flex flex-col"
+              style={plan.popular ? {
+                border: '2px solid var(--primary)',
+                boxShadow: '0 20px 25px -5px rgba(var(--primary-rgb), 0.2)'
+              } : {
+                border: '1px solid rgba(31, 41, 55, 1)'
+              }}
+              onMouseEnter={(e) => {
+                if (!plan.popular) e.currentTarget.style.borderColor = 'var(--primary)';
+              }}
+              onMouseLeave={(e) => {
+                if (!plan.popular) e.currentTarget.style.borderColor = 'rgba(31, 41, 55, 1)';
+              }}
             >
               {/* Бейдж популярного тарифа */}
               {plan.popular && (
-                <div className="absolute top-0 right-0 bg-red-600 text-white px-3 py-1 sm:px-4 text-xs sm:text-sm font-semibold rounded-bl-lg">
+                <div className="absolute top-0 right-0 text-white px-3 py-1 sm:px-4 text-xs sm:text-sm font-semibold rounded-bl-lg" style={{ backgroundColor: 'var(--primary)' }}>
                   Популярный
                 </div>
               )}
@@ -102,7 +110,7 @@ const Pricing = () => {
 
                 {/* Цена */}
                 <div className="mb-6 sm:mb-8">
-                  <span className="text-3xl sm:text-4xl font-bold text-red-600">
+                  <span className="text-3xl sm:text-4xl font-bold" style={{ color: 'var(--primary)' }}>
                     {plan.price}
                   </span>
                   <span className="text-gray-400 ml-1 sm:ml-2 text-sm sm:text-base">₽</span>
@@ -113,7 +121,8 @@ const Pricing = () => {
                   {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start">
                       <svg
-                        className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 mr-2 sm:mr-3 flex-shrink-0 mt-0.5"
+                        className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 flex-shrink-0 mt-0.5"
+                        style={{ color: 'var(--primary)' }}
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -131,11 +140,19 @@ const Pricing = () => {
                 {/* Кнопка */}
                 <button
                   onClick={() => handleOrderClick(plan)}
-                  className={`w-full py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-semibold transition-all cursor-pointer ${
-                    plan.popular
-                      ? 'bg-red-600 hover:bg-red-700 text-white'
-                      : 'bg-gray-800 hover:bg-gray-700 text-white border border-gray-700'
-                  }`}
+                  className="w-full py-2.5 sm:py-3 rounded-full text-sm sm:text-base font-semibold transition-all cursor-pointer text-white"
+                  style={plan.popular ? {
+                    backgroundColor: 'var(--primary)'
+                  } : {
+                    backgroundColor: 'rgb(31, 41, 55)',
+                    border: '1px solid rgb(55, 65, 81)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = plan.popular ? 'var(--primary-dark)' : 'rgb(55, 65, 81)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = plan.popular ? 'var(--primary)' : 'rgb(31, 41, 55)';
+                  }}
                 >
                   Заказать
                 </button>
@@ -150,24 +167,40 @@ const Pricing = () => {
             <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 sm:mb-4 text-center">
               Индивидуальные условия
             </h3>
-            <p className="text-sm sm:text-base text-gray-400 text-center mb-4 sm:mb-6 px-2">
+            <p className="text-sm sm:text-base text-gray-400 text-center mb-6 sm:mb-8 px-2 leading-relaxed">
               Если вам нужны дополнительные услуги или особые условия работы - свяжитесь с нами. Мы разработаем индивидуальное предложение специально для вас.
             </p>
+
+            {/* Работаем без предоплаты - выделено */}
+            <div className="mb-6 sm:mb-8 p-4 rounded-lg" style={{ backgroundColor: 'rgba(var(--primary-rgb), 0.1)', borderWidth: '1px', borderStyle: 'solid', borderColor: 'rgba(var(--primary-rgb), 0.3)' }}>
+              <div className="flex items-center justify-center gap-2 sm:gap-3">
+                <svg className="w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0" style={{ color: 'var(--primary)' }} fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="text-base sm:text-lg md:text-xl font-bold text-white">
+                  Работаем <span style={{ color: 'var(--primary-light)' }}>без предоплаты</span>
+                </span>
+              </div>
+              <p className="text-xs sm:text-sm text-gray-400 text-center mt-2">
+                Оплата производится после оказания услуг
+              </p>
+            </div>
+
             <div className="flex flex-wrap justify-center gap-3 sm:gap-4 text-sm sm:text-base">
               <div className="flex items-center space-x-1.5 sm:space-x-2 text-gray-300">
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" style={{ color: 'var(--primary)' }} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>Скидки при повторном обращении</span>
               </div>
               <div className="flex items-center space-x-1.5 sm:space-x-2 text-gray-300">
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" style={{ color: 'var(--primary)' }} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>Гибкая система оплаты</span>
               </div>
               <div className="flex items-center space-x-1.5 sm:space-x-2 text-gray-300">
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-red-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" style={{ color: 'var(--primary)' }} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>Специальные предложения</span>

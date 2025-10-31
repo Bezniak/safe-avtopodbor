@@ -45,15 +45,15 @@ const CookieBanner = () => {
       
       {/* Баннер */}
       <div className="relative container mx-auto px-4 pb-4">
-        <div className="bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-red-600/50 rounded-xl p-4 md:p-5 shadow-2xl shadow-red-600/20 max-w-6xl mx-auto">
+        <div className="bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 rounded-xl p-4 md:p-5 shadow-2xl max-w-6xl mx-auto" style={{ borderColor: 'rgba(var(--primary-rgb), 0.5)', boxShadow: '0 25px 50px -12px rgba(var(--primary-rgb), 0.2)' }}>
           {/* Декоративные элементы */}
-          <div className="absolute -top-2 -right-2 w-24 h-24 bg-red-600/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute -bottom-2 -left-2 w-24 h-24 bg-red-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+          <div className="absolute -top-2 -right-2 w-24 h-24 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'rgba(var(--primary-rgb), 0.1)' }}></div>
+          <div className="absolute -bottom-2 -left-2 w-24 h-24 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'rgba(var(--primary-rgb), 0.1)', animationDelay: '0.5s' }}></div>
 
           <div className="relative flex flex-col md:flex-row items-center gap-4">
             {/* Иконка */}
             <div className="flex-shrink-0">
-              <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center shadow-lg shadow-red-600/50">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg" style={{ backgroundImage: 'linear-gradient(to bottom right, var(--primary), var(--primary-dark))', boxShadow: '0 10px 15px -3px rgba(var(--primary-rgb), 0.5)' }}>
                 <span className="text-2xl">🍪</span>
               </div>
             </div>
@@ -65,7 +65,10 @@ const CookieBanner = () => {
                 Продолжая использовать сайт, вы соглашаетесь с нашей{' '}
                 <Link
                   to="/privacy"
-                  className="text-red-500 hover:text-red-400 underline transition-colors"
+                  className="underline transition-colors"
+                  style={{ color: 'var(--primary-light)' }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = 'var(--primary-light)'}
                   onClick={() => handleAccept()}
                 >
                   политикой конфиденциальности
@@ -77,14 +80,19 @@ const CookieBanner = () => {
             <div className="flex flex-row gap-3">
               <button
                 onClick={handleAccept}
-                className="px-6 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-full text-sm font-semibold transition-all transform hover:scale-105 shadow-lg shadow-red-600/50 whitespace-nowrap cursor-pointer"
+                className="px-6 py-2 text-white rounded-full text-sm font-semibold transition-all transform hover:scale-105 shadow-lg whitespace-nowrap cursor-pointer"
+                style={{ backgroundImage: 'linear-gradient(to right, var(--primary), var(--primary-dark))', boxShadow: '0 10px 15px -3px rgba(var(--primary-rgb), 0.5)' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundImage = 'linear-gradient(to right, var(--primary-dark), var(--primary-darker))'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundImage = 'linear-gradient(to right, var(--primary), var(--primary-dark))'}
                 aria-label="Принять использование cookies"
               >
                 Принять
               </button>
               <button
                 onClick={handleDecline}
-                className="px-6 py-2 bg-transparent border-2 border-gray-700 hover:border-red-600 text-gray-300 hover:text-white rounded-full text-sm font-semibold transition-all whitespace-nowrap cursor-pointer"
+                className="px-6 py-2 bg-transparent border-2 border-gray-700 text-gray-300 hover:text-white rounded-full text-sm font-semibold transition-all whitespace-nowrap cursor-pointer"
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgb(55, 65, 81)'}
                 aria-label="Отклонить использование cookies"
               >
                 Отклонить

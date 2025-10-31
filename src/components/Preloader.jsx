@@ -35,8 +35,8 @@ const Preloader = () => {
     >
       {/* Анимированный фон */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-red-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '3s' }}></div>
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-red-800/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s', animationDelay: '1s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-[rgba(var(--primary-rgb),0.1)] rounded-full blur-3xl animate-pulse" style={{ animationDuration: '3s' }}></div>
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[rgba(var(--primary-darker-rgb),0.1)] rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s', animationDelay: '1s' }}></div>
       </div>
 
       {/* Контент */}
@@ -67,15 +67,15 @@ const Preloader = () => {
               strokeDashoffset={offset}
               className="transition-all duration-300 ease-out"
               style={{
-                filter: 'drop-shadow(0 0 8px rgba(220, 38, 38, 0.6))'
+                filter: 'drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.6))'
               }}
             />
             {/* Градиент для линии прогресса */}
             <defs>
               <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#dc2626" />
-                <stop offset="50%" stopColor="#ef4444" />
-                <stop offset="100%" stopColor="#dc2626" />
+                <stop offset="0%" stopColor="#2563A8" />
+                <stop offset="50%" stopColor="#5BA5D9" />
+                <stop offset="100%" stopColor="#2563A8" />
               </linearGradient>
             </defs>
           </svg>
@@ -88,7 +88,7 @@ const Preloader = () => {
                 alt="SAFE-АВТОПОДБОР"
                 className="w-24 h-24 object-contain animate-pulse"
                 style={{
-                  filter: 'drop-shadow(0 0 15px rgba(220, 38, 38, 0.5))',
+                  filter: 'drop-shadow(0 0 15px rgba(var(--primary-rgb), 0.5))',
                   animationDuration: '2s'
                 }}
               />
@@ -98,7 +98,7 @@ const Preloader = () => {
           {/* Процент в центре снизу */}
           <div className="absolute inset-0 flex items-center justify-center mt-20">
             <span className="text-3xl font-bold text-white">
-              {progress}<span className="text-xl text-red-600">%</span>
+              {progress}<span className="text-xl text-[var(--primary)]">%</span>
             </span>
           </div>
         </div>
@@ -112,9 +112,9 @@ const Preloader = () => {
 
         {/* Анимированные точки */}
         <div className="mt-6 flex space-x-2">
-          <div className="w-2 h-2 bg-red-600 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
-          <div className="w-2 h-2 bg-red-600 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-          <div className="w-2 h-2 bg-red-600 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+          <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '0s' }}></div>
+          <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+          <div className="w-2 h-2 bg-[var(--primary)] rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
         </div>
       </div>
     </div>

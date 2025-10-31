@@ -34,9 +34,11 @@ const Stats = () => {
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="text-center p-6 rounded-lg bg-gradient-to-br from-gray-900 to-black border border-gray-800 hover:border-red-600 transition-all transform hover:scale-105"
+              className="text-center p-6 rounded-lg bg-gradient-to-br from-gray-900 to-black border border-gray-800 transition-all transform hover:scale-105"
+              onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--primary)'}
+              onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(31, 41, 55, 1)'}
             >
-              <div className="text-5xl font-bold text-red-600 mb-2">
+              <div className="text-5xl font-bold mb-2" style={{ color: 'var(--primary)' }}>
                 {stat.value}
               </div>
               <div className="text-xl font-semibold text-white mb-2">

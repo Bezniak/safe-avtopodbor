@@ -71,7 +71,7 @@ const Header = () => {
             <img
               src="/лого 1 без фона.svg"
               alt="Безопасный АвтоПодбор - логотип компании по подбору автомобилей в Москве"
-              className="h-12 sm:h-16 md:h-20 w-44 sm:w-56 md:w-80 object-contain object-left"
+              className="h-12 sm:h-14 md:h-16 w-auto object-contain"
             />
           </Link>
 

@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+/* Глобальные цветовые переменные из логотипа */
+:root {
+  /* Основные цвета бренда (синие из логотипа) */
+  --primary-light: #5BA5D9;      /* Светло-голубой из "БЕЗОПАСНЫЙ" */
+  --primary: #2563A8;             /* Темно-синий из "ПОДБОР" */
+  --primary-dark: #1E5A8E;        /* Еще темнее для hover эффектов */
+  --primary-darker: #164573;      /* Самый темный для активных состояний */
+
+  /* RGB значения для прозрачности */
+  --primary-light-rgb: 91, 165, 217;
+  --primary-rgb: 37, 99, 168;
+  --primary-dark-rgb: 30, 90, 142;
+}
+
 /* Custom animations */
 @keyframes shake {
   0%, 100% {
@@ -59,49 +73,212 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%);
+  background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
   border-radius: 6px;
   border: 2px solid #0a0a0a;
   transition: all 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
-  box-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
+  background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary) 100%);
+  box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
 }
 
 ::-webkit-scrollbar-thumb:active {
-  background: linear-gradient(180deg, #991b1b 0%, #7f1d1d 100%);
+  background: linear-gradient(180deg, var(--primary-dark) 0%, var(--primary-darker) 100%);
 }
 
 /* Для Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #dc2626 #0a0a0a;
+  scrollbar-color: var(--primary) #0a0a0a;
 }
 
-/* Кастомный курсор - Стильная стрелка с красным акцентом */
+/* Кастомный курсор - Стильная стрелка с синим акцентом */
 body {
-  cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48cGF0aCBkPSJNNCA0IEw0IDI0IEwxMSAxNyBMMTUgMjggTDE4IDI3IEwxNCAxNiBMMjIgMTYgWiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iI2RjMjYyNiIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48L3N2Zz4=') 4 4, auto;
+  cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48cGF0aCBkPSJNNCA0IEw0IDI0IEwxMSAxNyBMMTUgMjggTDE4IDI3IEwxNCAxNiBMMjIgMTYgWiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzI1NjNBOCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48L3N2Zz4=') 4 4, auto;
 }
 
 /* Для интерактивных элементов - стильный круг */
 a, button, [role="button"], input, textarea, select, .cursor-pointer {
-  cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxNCIgZmlsbD0iI2RjMjYyNiIgb3BhY2l0eT0iMC4yIi8+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMTAiIGZpbGw9IiNkYzI2MjYiIG9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjYiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIzIiBmaWxsPSIjZGMyNjI2Ii8+PC9zdmc+') 20 20, pointer;
+  cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxNCIgZmlsbD0iIzI1NjNBOCIgb3BhY2l0eT0iMC4yIi8+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMTAiIGZpbGw9IiMyNTYzQTgiIG9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjYiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIzIiBmaWxsPSIjMjU2M0E4Ii8+PC9zdmc+') 20 20, pointer;
 }
 
-/* Для текстовых полей - курсор с красным акцентом */
+/* Для текстовых полей - курсор с синим акцентом */
 input[type="text"], input[type="email"], input[type="tel"], textarea {
-  cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48bGluZSB4MT0iMTIiIHkxPSI0IiB4Mj0iMTIiIHkyPSIyMCIgc3Ryb2tlPSIjZGMyNjI2IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxsaW5lIHgxPSI4IiB5MT0iNCIgeDI9IjE2IiB5Mj0iNCIgc3Ryb2tlPSIjZGMyNjI2IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxsaW5lIHgxPSI4IiB5MT0iMjAiIHgyPSIxNiIgeTI9IjIwIiBzdHJva2U9IiNkYzI2MjYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+') 12 12, text;
+  cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48bGluZSB4MT0iMTIiIHkxPSI0IiB4Mj0iMTIiIHkyPSIyMCIgc3Ryb2tlPSIjMjU2M0E4IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxsaW5lIHgxPSI4IiB5MT0iNCIgeDI9IjE2IiB5Mj0iNCIgc3Ryb2tlPSIjMjU2M0E4IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxsaW5lIHgxPSI4IiB5MT0iMjAiIHgyPSIxNiIgeTI9IjIwIiBzdHJva2U9IiMyNTYzQTgiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PC9zdmc+') 12 12, text;
 }
 
 /* Кастомное выделение текста */
 ::selection {
-  background-color: rgba(220, 38, 38, 0.3);
+  background-color: rgba(var(--primary-rgb), 0.3);
   color: #ffffff;
 }
 
 ::-moz-selection {
-  background-color: rgba(220, 38, 38, 0.3);
+  background-color: rgba(var(--primary-rgb), 0.3);
   color: #ffffff;
+}
+
+/* Глобальные утилитные классы для замены красного на синий */
+@layer utilities {
+  /* Текстовые цвета */
+  .text-red-500, .text-red-600 {
+    color: var(--primary) !important;
+  }
+
+  .text-red-400 {
+    color: var(--primary-light) !important;
+  }
+
+  .text-red-700 {
+    color: var(--primary-dark) !important;
+  }
+
+  /* Фоновые цвета */
+  .bg-red-600, .bg-red-500 {
+    background-color: var(--primary) !important;
+  }
+
+  .bg-red-700 {
+    background-color: var(--primary-dark) !important;
+  }
+
+  .bg-red-800 {
+    background-color: var(--primary-darker) !important;
+  }
+
+  /* Фоновые цвета с прозрачностью */
+  .bg-red-600\/10 {
+    background-color: rgba(var(--primary-rgb), 0.1) !important;
+  }
+
+  .bg-red-600\/20 {
+    background-color: rgba(var(--primary-rgb), 0.2) !important;
+  }
+
+  .bg-red-600\/5 {
+    background-color: rgba(var(--primary-rgb), 0.05) !important;
+  }
+
+  /* Границы */
+  .border-red-600 {
+    border-color: var(--primary) !important;
+  }
+
+  .border-red-600\/30 {
+    border-color: rgba(var(--primary-rgb), 0.3) !important;
+  }
+
+  .border-red-600\/50 {
+    border-color: rgba(var(--primary-rgb), 0.5) !important;
+  }
+
+  .border-red-800 {
+    border-color: var(--primary-darker) !important;
+  }
+
+  /* Hover эффекты для фона */
+  .hover\:bg-red-700:hover {
+    background-color: var(--primary-dark) !important;
+  }
+
+  .hover\:bg-red-600:hover {
+    background-color: var(--primary) !important;
+  }
+
+  .hover\:bg-red-500:hover {
+    background-color: var(--primary-light) !important;
+  }
+
+  .hover\:bg-gray-600:hover {
+    background-color: #4b5563 !important;
+  }
+
+  /* Hover эффекты для текста */
+  .hover\:text-red-600:hover {
+    color: var(--primary) !important;
+  }
+
+  .hover\:text-red-500:hover {
+    color: var(--primary-light) !important;
+  }
+
+  /* Hover эффекты для границ */
+  .hover\:border-red-600:hover {
+    border-color: var(--primary) !important;
+  }
+
+  .hover\:border-red-600\/50:hover {
+    border-color: rgba(var(--primary-rgb), 0.5) !important;
+  }
+
+  /* Active эффекты */
+  .active\:bg-red-800:active {
+    background-color: var(--primary-darker) !important;
+  }
+
+  .active\:scale-95:active {
+    transform: scale(0.95) !important;
+  }
+
+  /* Focus эффекты */
+  .focus\:border-red-600:focus {
+    border-color: var(--primary) !important;
+  }
+
+  .focus\:ring-red-600\/20:focus {
+    --tw-ring-color: rgba(var(--primary-rgb), 0.2) !important;
+  }
+
+  /* Group hover эффекты */
+  .group:hover .group-hover\:text-red-500,
+  .group:hover .group-hover\:text-red-600 {
+    color: var(--primary) !important;
+  }
+
+  .group:hover .group-hover\:bg-red-600 {
+    background-color: var(--primary) !important;
+  }
+
+  .group:hover .group-hover\:bg-red-600\/30 {
+    background-color: rgba(var(--primary-rgb), 0.3) !important;
+  }
+
+  /* Тени */
+  .shadow-red-600\/50 {
+    --tw-shadow-color: rgba(var(--primary-rgb), 0.5) !important;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+  }
+
+  .shadow-red-600\/20 {
+    --tw-shadow-color: rgba(var(--primary-rgb), 0.2) !important;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+  }
+
+  .hover\:shadow-red-600\/20:hover {
+    box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.2) !important;
+  }
+
+  /* Градиенты */
+  .from-red-600 {
+    --tw-gradient-from: var(--primary) !important;
+    --tw-gradient-to: rgb(var(--primary-rgb) / 0) !important;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+  }
+
+  .from-red-600\/10 {
+    --tw-gradient-from: rgba(var(--primary-rgb), 0.1) !important;
+    --tw-gradient-to: rgba(var(--primary-rgb), 0) !important;
+    --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+  }
+
+  .to-red-700, .to-red-800 {
+    --tw-gradient-to: var(--primary-dark) !important;
+  }
+
+  .via-red-600\/5 {
+    --tw-gradient-to: rgba(var(--primary-rgb), 0) !important;
+    --tw-gradient-stops: var(--tw-gradient-from), rgba(var(--primary-rgb), 0.05), var(--tw-gradient-to) !important;
+  }
 }

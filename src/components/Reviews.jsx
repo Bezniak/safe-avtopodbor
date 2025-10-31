@@ -93,14 +93,14 @@ const Reviews = () => {
   const needsTruncation = currentReview.text.length > MAX_LENGTH;
 
   return (
-    <section id="reviews" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-b from-black to-gray-900">
+    <section id="reviews" className="pt-10 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-b from-black to-gray-900">
       <div className="container mx-auto px-2 sm:px-4">
         {/* Заголовок секции */}
         <div className="text-center mb-10 sm:mb-12 md:mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 px-2">
-            Отзывы наших <span className="text-red-600">клиентов</span>
+            Отзывы наших <span style={{ color: 'var(--primary)' }}>клиентов</span>
           </h2>
-          <div className="w-16 sm:w-20 h-1 bg-red-600 mx-auto mb-4 sm:mb-6"></div>
+          <div className="w-16 sm:w-20 h-1 mx-auto mb-4 sm:mb-6" style={{ backgroundColor: 'var(--primary)' }}></div>
           <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto px-4">
             За {yearsInBusiness} {yearsInBusiness === 1 ? 'год' : yearsInBusiness < 5 ? 'года' : 'лет'} работы мы заслужили доверие сотен довольных клиентов
           </p>
@@ -124,7 +124,8 @@ const Reviews = () => {
               {[...Array(reviews[currentIndex].rating)].map((_, i) => (
                 <svg
                   key={i}
-                  className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 text-red-600"
+                  className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6"
+                  style={{ color: 'var(--primary)' }}
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -141,7 +142,10 @@ const Reviews = () => {
               {needsTruncation && (
                 <button
                   onClick={() => toggleExpand(currentIndex)}
-                  className="mt-2 sm:mt-3 text-red-600 hover:text-red-500 text-sm sm:text-base font-medium transition-colors inline-flex items-center gap-1"
+                  className="mt-2 sm:mt-3 text-sm sm:text-base font-medium transition-colors inline-flex items-center gap-1"
+                  style={{ color: 'var(--primary)' }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-light)'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = 'var(--primary)'}
                 >
                   {isExpanded ? (
                     <>
@@ -168,7 +172,7 @@ const Reviews = () => {
                 <p className="text-base sm:text-lg font-semibold text-white mb-0.5 sm:mb-1">
                   {currentReview.name}
                 </p>
-                <p className="text-red-600 text-sm sm:text-base font-medium">
+                <p className="text-sm sm:text-base font-medium" style={{ color: 'var(--primary)' }}>
                   {currentReview.car}
                 </p>
               </div>
@@ -181,17 +185,35 @@ const Reviews = () => {
           {/* Кнопки навигации - только на десктопе */}
           <button
             onClick={prevSlide}
-            className="hidden md:flex group absolute left-0 top-1/2 -translate-y-1/2 -translate-x-24 z-10 cursor-pointer w-16 h-16 bg-black/50 border-2 border-red-600 hover:bg-red-600 hover:border-red-500 items-center justify-center transition-all"
+            className="hidden md:flex group absolute left-0 top-1/2 -translate-y-1/2 -translate-x-24 z-10 cursor-pointer w-16 h-16 bg-black/50 border-2 items-center justify-center transition-all"
+            style={{ borderColor: 'var(--primary)', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--primary)';
+              e.currentTarget.querySelector('svg').style.color = 'white';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+              e.currentTarget.querySelector('svg').style.color = 'var(--primary)';
+            }}
           >
-            <svg className="w-6 h-6 text-red-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 transition-colors" style={{ color: 'var(--primary)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           <button
             onClick={nextSlide}
-            className="hidden md:flex group absolute right-0 top-1/2 -translate-y-1/2 translate-x-24 z-10 cursor-pointer w-16 h-16 bg-black/50 border-2 border-red-600 hover:bg-red-600 hover:border-red-500 items-center justify-center transition-all"
+            className="hidden md:flex group absolute right-0 top-1/2 -translate-y-1/2 translate-x-24 z-10 cursor-pointer w-16 h-16 bg-black/50 border-2 items-center justify-center transition-all"
+            style={{ borderColor: 'var(--primary)', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--primary)';
+              e.currentTarget.querySelector('svg').style.color = 'white';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+              e.currentTarget.querySelector('svg').style.color = 'var(--primary)';
+            }}
           >
-            <svg className="w-6 h-6 text-red-600 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 transition-colors" style={{ color: 'var(--primary)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
             </svg>
           </button>
@@ -211,9 +233,10 @@ const Reviews = () => {
                   onClick={() => goToSlide(index)}
                   className={`w-3 h-3 rounded-full transition-all ${
                     index === currentIndex
-                      ? 'bg-red-600 w-8'
+                      ? 'w-8'
                       : 'bg-gray-600 hover:bg-gray-500'
                   }`}
+                  style={index === currentIndex ? { backgroundColor: 'var(--primary)' } : {}}
                 />
               ))}
             </div>
@@ -227,15 +250,15 @@ const Reviews = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 px-2">
             <div className="bg-black/50 border border-gray-800 rounded-lg px-4 py-2 sm:px-6 sm:py-3">
-              <span className="text-xl sm:text-2xl font-bold text-red-600">4.9</span>
-              <span className="text-gray-400 text-xs sm:text-base ml-1 sm:ml-2">из 5.0</span>
+              <span className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--primary)' }}>5</span>
+              <span className="text-gray-400 text-xs sm:text-base ml-1 sm:ml-2">из 5</span>
             </div>
             <div className="bg-black/50 border border-gray-800 rounded-lg px-4 py-2 sm:px-6 sm:py-3">
-              <span className="text-xl sm:text-2xl font-bold text-red-600">98%</span>
+              <span className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--primary)' }}>98%</span>
               <span className="text-gray-400 text-xs sm:text-base ml-1 sm:ml-2">рекомендуют</span>
             </div>
             <div className="bg-black/50 border border-gray-800 rounded-lg px-4 py-2 sm:px-6 sm:py-3">
-              <span className="text-xl sm:text-2xl font-bold text-red-600">500+</span>
+              <span className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--primary)' }}>500+</span>
               <span className="text-gray-400 text-xs sm:text-base ml-1 sm:ml-2">клиентов</span>
             </div>
           </div>
