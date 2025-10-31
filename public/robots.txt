@@ -1,0 +1,16 @@
+# Разрешаем всем поисковым роботам индексировать сайт
+User-agent: *
+Allow: /
+
+# Указываем путь к карте сайта
+Sitemap: https://safe-avtopodbor.ru/sitemap.xml
+
+# Основные поисковые системы
+User-agent: Googlebot
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+User-agent: Bingbot
+Allow: /

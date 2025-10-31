@@ -1,0 +1,111 @@
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+
+const CookieBanner = () => {
+  const [isVisible, setIsVisible] = useState(false)
+  const [isClosing, setIsClosing] = useState(false)
+
+  useEffect(() => {
+    // Проверяем, принял ли пользователь cookies
+    const cookieConsent = localStorage.getItem('cookieConsent')
+    if (!cookieConsent) {
+      // Показываем баннер с небольшой задержкой для лучшего UX
+      setTimeout(() => {
+        setIsVisible(true)
+      }, 1000)
+    }
+  }, [])
+
+  const handleAccept = () => {
+    setIsClosing(true)
+    setTimeout(() => {
+      localStorage.setItem('cookieConsent', 'accepted')
+      setIsVisible(false)
+    }, 300)
+  }
+
+  const handleDecline = () => {
+    setIsClosing(true)
+    setTimeout(() => {
+      localStorage.setItem('cookieConsent', 'declined')
+      setIsVisible(false)
+    }, 300)
+  }
+
+  if (!isVisible) return null
+
+  return (
+    <div 
+      className={`fixed bottom-0 left-0 right-0 z-[100] transition-all duration-300 ${
+        isClosing ? 'translate-y-full opacity-0' : 'translate-y-0 opacity-100'
+      }`}
+    >
+      {/* Затемнение фона */}
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={handleAccept}></div>
+      
+      {/* Баннер */}
+      <div className="relative container mx-auto px-4 pb-4">
+        <div className="bg-gradient-to-br from-gray-900 via-black to-gray-900 border-2 border-red-600/50 rounded-xl p-4 md:p-5 shadow-2xl shadow-red-600/20 max-w-6xl mx-auto">
+          {/* Декоративные элементы */}
+          <div className="absolute -top-2 -right-2 w-24 h-24 bg-red-600/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-2 -left-2 w-24 h-24 bg-red-600/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+
+          <div className="relative flex flex-col md:flex-row items-center gap-4">
+            {/* Иконка */}
+            <div className="flex-shrink-0">
+              <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-700 rounded-full flex items-center justify-center shadow-lg shadow-red-600/50">
+                <span className="text-2xl">🍪</span>
+              </div>
+            </div>
+
+            {/* Текст */}
+            <div className="flex-1 text-center md:text-left">
+              <p className="text-gray-300 text-sm leading-snug">
+                Мы используем файлы cookie для улучшения работы сайта.
+                Продолжая использовать сайт, вы соглашаетесь с нашей{' '}
+                <Link
+                  to="/privacy"
+                  className="text-red-500 hover:text-red-400 underline transition-colors"
+                  onClick={() => handleAccept()}
+                >
+                  политикой конфиденциальности
+                </Link>.
+              </p>
+            </div>
+
+            {/* Кнопки */}
+            <div className="flex flex-row gap-3">
+              <button
+                onClick={handleAccept}
+                className="px-6 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white rounded-full text-sm font-semibold transition-all transform hover:scale-105 shadow-lg shadow-red-600/50 whitespace-nowrap cursor-pointer"
+                aria-label="Принять использование cookies"
+              >
+                Принять
+              </button>
+              <button
+                onClick={handleDecline}
+                className="px-6 py-2 bg-transparent border-2 border-gray-700 hover:border-red-600 text-gray-300 hover:text-white rounded-full text-sm font-semibold transition-all whitespace-nowrap cursor-pointer"
+                aria-label="Отклонить использование cookies"
+              >
+                Отклонить
+              </button>
+            </div>
+          </div>
+
+          {/* Кнопка закрытия */}
+          <button
+            onClick={handleAccept}
+            className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors p-1"
+            aria-label="Закрыть уведомление"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default CookieBanner
