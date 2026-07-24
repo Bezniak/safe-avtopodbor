@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useYandexMetrika } from '../hooks/useYandexMetrika';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
+  const { trackPhoneClick, trackButtonClick } = useYandexMetrika();
 
   const scrollToSection = (id) => {
     // Если мы не на главной странице, сначала перейдем на главную
@@ -36,7 +38,7 @@ const Header = () => {
     }
 
     const handleScroll = () => {
-      const sections = ['about', 'services', 'advantages', 'reviews', 'pricing'];
+      const sections = ['about', 'services', 'advantages', 'cases', 'pricing'];
       const scrollPosition = window.scrollY + 100;
 
       for (const section of sections) {
@@ -64,14 +66,14 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-black/95 backdrop-blur-sm z-50 border-b border-gray-800">
-      <div className="container mx-auto px-2 sm:px-4">
-        <div className="flex items-center h-16 sm:h-20 md:h-24">
+      <div className="container mx-auto px-4 sm:px-6 md:px-8 py-2">
+        <div className="flex items-center h-16 sm:h-20 md:h-24 py-2">
           {/* Логотип */}
-          <Link to="/" className="flex items-center" aria-label="Перейти на главную страницу">
+          <Link to="/" className="flex items-center overflow-hidden" aria-label="Перейти на главную страницу">
             <img
               src="/лого 1 без фона.svg"
               alt="Безопасный АвтоПодбор - логотип компании по подбору автомобилей в Москве"
-              className="h-12 sm:h-14 md:h-16 w-auto object-contain"
+              className="h-20 sm:h-24 md:h-32 w-40 sm:w-48 md:w-64 object-cover object-center"
             />
           </Link>
 
@@ -105,11 +107,11 @@ const Header = () => {
               )}
             </button>
             <button
-              onClick={() => scrollToSection('reviews')}
-              className={`relative text-gray-300 hover:text-white transition-colors cursor-pointer ${activeSection === 'reviews' ? 'text-white font-semibold' : ''}`}
+              onClick={() => scrollToSection('cases')}
+              className={`relative text-gray-300 hover:text-white transition-colors cursor-pointer ${activeSection === 'cases' ? 'text-white font-semibold' : ''}`}
             >
-              Отзывы
-              {activeSection === 'reviews' && (
+              Наша работа
+              {activeSection === 'cases' && (
                 <span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-red-600 animate-pulse"></span>
               )}
             </button>
@@ -128,12 +130,14 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-4 ml-8">
             <a
               href="tel:+79932882809"
+              onClick={() => trackPhoneClick('+79932882809')}
               className="text-white font-semibold hover:text-red-600 transition-colors whitespace-nowrap"
             >
               +7 (993) 288-28-09
             </a>
             <Link
               to="/form"
+              onClick={() => trackButtonClick('Оставить заявку', 'header')}
               className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-semibold transition-colors cursor-pointer"
             >
               Оставить заявку
@@ -176,10 +180,10 @@ const Header = () => {
                 Преимущества
               </button>
               <button
-                onClick={() => scrollToSection('reviews')}
-                className={`px-3 py-2.5 sm:px-4 sm:py-3 rounded-lg text-sm sm:text-base text-left transition-all cursor-pointer ${activeSection === 'reviews' ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'}`}
+                onClick={() => scrollToSection('cases')}
+                className={`px-3 py-2.5 sm:px-4 sm:py-3 rounded-lg text-sm sm:text-base text-left transition-all cursor-pointer ${activeSection === 'cases' ? 'bg-red-600 text-white' : 'text-gray-300 hover:bg-gray-800 hover:text-white'}`}
               >
-                Отзывы
+                Наша работа
               </button>
               <button
                 onClick={() => scrollToSection('pricing')}
@@ -192,6 +196,7 @@ const Header = () => {
 
               <a
                 href="tel:+79932882809"
+                onClick={() => trackPhoneClick('+79932882809')}
                 className="flex items-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 rounded-lg text-sm sm:text-base text-white font-semibold hover:bg-gray-800 transition-all"
               >
                 <svg className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" fill="currentColor" viewBox="0 0 20 20">
@@ -202,7 +207,10 @@ const Header = () => {
 
               <Link
                 to="/form"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  trackButtonClick('Оставить заявку', 'mobile_menu');
+                }}
                 className="mt-2 bg-red-600 hover:bg-red-700 text-white px-3 py-2.5 sm:px-4 sm:py-3 rounded-lg text-sm sm:text-base font-semibold transition-all text-center cursor-pointer"
               >
                 Оставить заявку

@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import confetti from 'canvas-confetti'
+import { useYandexMetrika } from '../hooks/useYandexMetrika'
 
 const ContactPage = () => {
   const [searchParams] = useSearchParams()
   const selectedService = searchParams.get('service')
   const selectedPrice = searchParams.get('price')
+  const { trackFormSubmit, trackPhoneClick, trackSocialClick } = useYandexMetrika()
 
   // Данные услуг и тарифов
   const services = [
@@ -125,19 +127,46 @@ const ContactPage = () => {
       newErrors.name = 'Имя должно содержать минимум 2 символа'
     }
 
-    // Валидация телефона
-    const phoneRegex = /^[\d\s\+\-\(\)]{10,}$/
+    // Валидация российского номера телефона
     if (!formData.phone.trim()) {
       newErrors.phone = 'Пожалуйста, укажите номер телефона'
-    } else if (!phoneRegex.test(formData.phone.replace(/\s/g, ''))) {
-      newErrors.phone = 'Неверный формат номера телефона'
+    } else {
+      // Удаляем все символы кроме цифр и +
+      const cleanPhone = formData.phone.replace(/[^\d+]/g, '')
+
+      // Проверяем российский формат:
+      // +7XXXXXXXXXX (12 символов) или 8XXXXXXXXXX (11 символов) или 7XXXXXXXXXX (11 символов)
+      const russianPhoneRegex = /^(\+7|7|8)\d{10}$/
+
+      if (!russianPhoneRegex.test(cleanPhone)) {
+        newErrors.phone = 'Введите корректный российский номер телефона (например, +7 900 123-45-67)'
+      }
+
+      // Дополнительная проверка: номер не должен состоять из одинаковых цифр
+      const digitsOnly = cleanPhone.replace(/^(\+7|7|8)/, '')
+      if (/^(\d)\1{9}$/.test(digitsOnly)) {
+        newErrors.phone = 'Введите действительный номер телефона'
+      }
     }
 
     // Валидация email (опционально, но если заполнен - проверяем)
     if (formData.email.trim()) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      // Более строгая проверка email
+      const emailRegex = /^[a-zA-Z0-9]([a-zA-Z0-9._-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z]{2,})+$/
+
       if (!emailRegex.test(formData.email)) {
-        newErrors.email = 'Неверный формат email'
+        newErrors.email = 'Введите корректный email адрес'
+      }
+
+      // Проверка длины
+      if (formData.email.length > 254) {
+        newErrors.email = 'Email адрес слишком длинный'
+      }
+
+      // Проверка локальной части (до @)
+      const localPart = formData.email.split('@')[0]
+      if (localPart && localPart.length > 64) {
+        newErrors.email = 'Некорректный email адрес'
       }
     }
 
@@ -271,6 +300,9 @@ const ContactPage = () => {
 
       // Запуск конфетти
       fireConfetti()
+
+      // Отслеживание отправки формы в Яндекс.Метрике
+      trackFormSubmit('contact_page_form')
     } catch (error) {
       console.error('Ошибка отправки формы:', error)
       setIsSubmitting(false)
@@ -398,6 +430,7 @@ const ContactPage = () => {
                   <div className="flex justify-center gap-4 mb-8">
                     <a
                       href="tel:+79932882809"
+                      onClick={() => trackPhoneClick('+79932882809')}
                       className="flex items-center gap-2 bg-[var(--primary)] hover:bg-[var(--primary-dark)] text-white px-6 py-3 rounded-full font-semibold transition-all transform hover:scale-105"
                     >
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -409,6 +442,7 @@ const ContactPage = () => {
                       href="https://t.me/avtomobill444"
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => trackSocialClick('telegram')}
                       className="flex items-center gap-2 bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-full font-semibold transition-all transform hover:scale-105"
                     >
                       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -697,6 +731,7 @@ const ContactPage = () => {
             <div className="flex flex-wrap justify-center gap-6">
               <a
                 href="tel:+79932882809"
+                onClick={() => trackPhoneClick('+79932882809')}
                 className="group flex items-center gap-4 bg-gradient-to-r from-gray-900/80 to-black border-2 border-gray-800 hover:border-[var(--primary)] rounded-2xl px-8 py-5 transition-all duration-300 hover:scale-110 hover:shadow-xl hover:shadow-[rgba(var(--primary-rgb),0.2)]"
               >
                 <div className="w-12 h-12 bg-[rgba(var(--primary-rgb),0.1)] rounded-full flex items-center justify-center group-hover:bg-[var(--primary)] group-hover:scale-110 transition-all">
@@ -714,6 +749,7 @@ const ContactPage = () => {
                 href="https://t.me/avtomobill444"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackSocialClick('telegram')}
                 className="group flex items-center gap-4 bg-gradient-to-r from-gray-900/80 to-black border-2 border-gray-800 hover:border-[var(--primary)] rounded-2xl px-8 py-5 transition-all duration-300 hover:scale-110 hover:shadow-xl hover:shadow-[rgba(var(--primary-rgb),0.2)]"
               >
                 <div className="w-12 h-12 bg-[rgba(var(--primary-rgb),0.1)] rounded-full flex items-center justify-center group-hover:bg-[var(--primary)] group-hover:scale-110 transition-all">
@@ -731,6 +767,7 @@ const ContactPage = () => {
                 href="https://vk.com/carchoiespro"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackSocialClick('vk')}
                 className="group flex items-center gap-4 bg-gradient-to-r from-gray-900/80 to-black border-2 border-gray-800 hover:border-[var(--primary)] rounded-2xl px-8 py-5 transition-all duration-300 hover:scale-110 hover:shadow-xl hover:shadow-[rgba(var(--primary-rgb),0.2)]"
               >
                 <div className="w-12 h-12 bg-[rgba(var(--primary-rgb),0.1)] rounded-full flex items-center justify-center group-hover:bg-[var(--primary)] group-hover:scale-110 transition-all">
@@ -788,6 +825,7 @@ const ContactPage = () => {
             <div className="flex justify-center gap-4 animate-fadeIn" style={{ animationDelay: '0.4s' }}>
               <a
                 href="tel:+79932882809"
+                onClick={() => trackPhoneClick('+79932882809')}
                 className="flex items-center gap-2 text-gray-400 hover:text-[var(--primary-light)] transition-colors"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -799,6 +837,7 @@ const ContactPage = () => {
                 href="https://t.me/avtomobill444"
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackSocialClick('telegram')}
                 className="flex items-center gap-2 text-gray-400 hover:text-[var(--primary-light)] transition-colors"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">

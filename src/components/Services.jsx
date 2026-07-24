@@ -6,10 +6,70 @@ const Services = () => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [savedScrollPosition, setSavedScrollPosition] = useState(0);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [lightBeams, setLightBeams] = useState([]);
   const navigate = useNavigate();
 
-  // Минимальное расстояние свайпа для закрытия (в пикселях)
-  const minSwipeDistance = 50;
+  // Отслеживание позиции мыши и наличия курсора
+  const [mouseEnterTime, setMouseEnterTime] = useState(null);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      const section = document.getElementById('services');
+      if (section) {
+        const rect = section.getBoundingClientRect();
+        setMousePosition({
+          x: e.clientX - rect.left,
+          y: e.clientY - rect.top
+        });
+        if (mouseEnterTime === null) {
+          setMouseEnterTime(Date.now());
+        }
+      }
+    };
+
+    const handleMouseLeave = () => {
+      setMouseEnterTime(null);
+    };
+
+    const section = document.getElementById('services');
+    if (section) {
+      section.addEventListener('mousemove', handleMouseMove);
+      section.addEventListener('mouseleave', handleMouseLeave);
+      return () => {
+        section.removeEventListener('mousemove', handleMouseMove);
+        section.removeEventListener('mouseleave', handleMouseLeave);
+      };
+    }
+  }, [mouseEnterTime]);
+
+  // Инициализация и анимация плавающих сгустков
+  useEffect(() => {
+    const beams = Array.from({ length: 15 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      baseX: Math.random() * 100,
+      baseY: Math.random() * 100,
+      size: 15 + Math.random() * 25
+    }));
+    setLightBeams(beams);
+  }, []);
+
+  // Перерисовка для плавной активации сгустков по очереди
+  useEffect(() => {
+    if (mouseEnterTime !== null) {
+      const interval = setInterval(() => {
+        // Принудительный ре-рендер для обновления isActivated
+        setMousePosition(prev => ({ ...prev }));
+      }, 50);
+
+      return () => clearInterval(interval);
+    }
+  }, [mouseEnterTime]);
+
+  // Минимальное расстояние свайпа для закрытия (в пикселях) - уменьшено для лучшей отзывчивости
+  const minSwipeDistance = 30;
 
   const onTouchStart = (e) => {
     setTouchEnd(0); // Сбрасываем при новом касании
@@ -177,17 +237,105 @@ const Services = () => {
   ];
 
   return (
-    <section id="services" className="pt-2 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-b from-black to-gray-900">
-      <div className="container mx-auto px-4">
+    <section id="services" className="pt-2 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-b from-black to-gray-900 relative overflow-hidden">
+      {/* Плавающие светящиеся сгустки */}
+      <div className="absolute inset-0 pointer-events-none">
+        {lightBeams.map((beam, index) => {
+          let targetX, targetY;
+
+          // Проверяем, прошла ли задержка для этого сгустка
+          const delayForThisBeam = index * 400; // 400мс между каждым сгустком
+          const timeSinceMouseEntered = mouseEnterTime ? Date.now() - mouseEnterTime : 0;
+          const isActivated = mouseEnterTime !== null && timeSinceMouseEntered >= delayForThisBeam;
+
+          if (isActivated) {
+            // Притягиваются к курсору, но на разное расстояние
+            const section = document.getElementById('services');
+            const rect = section?.getBoundingClientRect();
+            if (rect) {
+              const baseXPx = (beam.baseX / 100) * rect.width;
+              const baseYPx = (beam.baseY / 100) * rect.height;
+
+              // Вычисляем направление к курсору
+              const dx = mousePosition.x - baseXPx;
+              const dy = mousePosition.y - baseYPx;
+
+              // Каждый сгусток приближается на разное расстояние (50-85% пути к курсору)
+              const attractionStrength = 0.5 + (index / lightBeams.length) * 0.35;
+
+              targetX = baseXPx + dx * attractionStrength;
+              targetY = baseYPx + dy * attractionStrength;
+            } else {
+              targetX = (beam.baseX / 100) * window.innerWidth;
+              targetY = (beam.baseY / 100) * window.innerHeight;
+            }
+          } else {
+            // Свободно плавают
+            targetX = beam.baseX;
+            targetY = beam.baseY;
+          }
+
+          return (
+            <div
+              key={beam.id}
+              className="floating-orb"
+              style={{
+                position: 'absolute',
+                left: isActivated ? `${targetX}px` : `${beam.baseX}%`,
+                top: isActivated ? `${targetY}px` : `${beam.baseY}%`,
+                width: `${beam.size}px`,
+                height: `${beam.size}px`,
+                transition: isActivated
+                  ? `all 2s cubic-bezier(0.16, 1, 0.3, 1)`
+                  : `all 1s ease-out`,
+                animation: isActivated ? 'none' : `float-orb-${index % 3} ${8 + index * 0.5}s ease-in-out infinite`,
+                animationDelay: `${index * 0.3}s`
+              }}
+            >
+              {/* Белый центр */}
+              <div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.6) 30%, rgba(200, 220, 255, 0.3) 60%, transparent 100%)',
+                  filter: 'blur(3px)'
+                }}
+              ></div>
+
+              {/* Синее свечение вокруг */}
+              <div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: 'radial-gradient(circle, rgba(100, 150, 255, 0.4) 0%, rgba(59, 130, 246, 0.3) 40%, transparent 70%)',
+                  boxShadow: '0 0 40px 15px rgba(59, 130, 246, 0.4), 0 0 60px 25px rgba(59, 130, 246, 0.2)',
+                  filter: 'blur(8px)',
+                  transform: 'scale(1.5)'
+                }}
+              ></div>
+
+              {/* Дополнительный внешний ореол */}
+              <div
+                className="absolute inset-0 rounded-full"
+                style={{
+                  background: 'radial-gradient(circle, transparent 0%, rgba(59, 130, 246, 0.15) 50%, transparent 80%)',
+                  filter: 'blur(15px)',
+                  transform: 'scale(2.5)'
+                }}
+              ></div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
         {/* Заголовок секции */}
         <div className="text-center mb-16">
-          <p className="text-[var(--primary)] text-sm font-semibold tracking-widest uppercase mb-4">Услуги</p>
+          <p className="text-[var(--primary)] text-sm font-semibold tracking-widest uppercase mb-4">Что мы предлагаем</p>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Что мы <span className="text-[var(--primary)]">проверяем</span>
+            Наши <span className="text-[var(--primary)]">услуги</span>
           </h2>
           <div className="w-20 h-1 bg-[var(--primary)] mx-auto mb-6"></div>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-            Комплексная проверка автомобиля по всем важным параметрам
+            Полный спектр услуг по подбору и проверке автомобилей
           </p>
         </div>
 
@@ -328,16 +476,29 @@ const Services = () => {
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
           >
-            {/* Кнопка закрытия / Ручка для свайпа */}
-            <div
-              className="flex-shrink-0 md:absolute md:top-4 md:right-4 w-full md:w-auto flex justify-center md:justify-end py-3 md:py-0 text-white transition-colors z-10 bg-gray-900/80 md:bg-transparent backdrop-blur-sm md:backdrop-blur-none cursor-pointer"
+            {/* Ручка для свайпа на мобильных */}
+            <div className="md:hidden flex justify-center py-3 bg-gray-900/50 backdrop-blur-sm relative">
+              <div className="w-12 h-1 bg-gray-600 rounded-full"></div>
+              {/* Крестик на мобильных - встроен в ручку */}
+              <button
+                className="md:hidden absolute top-1 right-5 w-8 h-8 flex items-center justify-center text-white active:text-gray-400 transition-colors"
+                onClick={() => setSelectedService(null)}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Кнопка закрытия - крестик на десктопе */}
+            <button
+              className="hidden md:block absolute top-4 right-4 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-gray-800/80 hover:bg-gray-700 text-white transition-colors"
               onClick={() => setSelectedService(null)}
             >
-              <div className="w-16 h-1.5 md:w-auto md:h-auto bg-gray-600 md:bg-transparent rounded-full md:rounded-none"></div>
-              <svg className="hidden md:block w-8 h-8 hover:text-[var(--primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
-            </div>
+            </button>
 
             {/* Контент с прокруткой */}
             <div className="flex-1 overflow-y-auto p-5 md:p-8 lg:p-12 pt-4 md:pt-8">
@@ -393,8 +554,9 @@ const Services = () => {
         </div>
       )}
 
-      {/* Анимация для модального окна */}
+      {/* Анимации */}
       <style>{`
+        /* Анимация для модального окна */
         @keyframes scaleIn {
           from {
             opacity: 0;
@@ -421,6 +583,52 @@ const Services = () => {
 
         .animate-slideUp {
           animation: slideUp 0.3s ease-out;
+        }
+
+        /* Анимации плавания сгустков */
+        @keyframes float-orb-0 {
+          0%, 100% {
+            transform: translate(0, 0);
+          }
+          25% {
+            transform: translate(30px, -40px);
+          }
+          50% {
+            transform: translate(-20px, -70px);
+          }
+          75% {
+            transform: translate(40px, -30px);
+          }
+        }
+
+        @keyframes float-orb-1 {
+          0%, 100% {
+            transform: translate(0, 0);
+          }
+          25% {
+            transform: translate(-40px, 30px);
+          }
+          50% {
+            transform: translate(25px, 60px);
+          }
+          75% {
+            transform: translate(-30px, 20px);
+          }
+        }
+
+        @keyframes float-orb-2 {
+          0%, 100% {
+            transform: translate(0, 0);
+          }
+          25% {
+            transform: translate(20px, 50px);
+          }
+          50% {
+            transform: translate(-35px, -20px);
+          }
+          75% {
+            transform: translate(45px, 10px);
+          }
         }
       `}</style>
     </section>

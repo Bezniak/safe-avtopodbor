@@ -69,10 +69,48 @@ const Advantages = () => {
 
   return (
     <section id="advantages" className="pt-10 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-b from-black via-gray-900 to-black relative overflow-hidden">
-      {/* Фоновые элементы */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-20 right-20 w-96 h-96 rounded-full blur-3xl" style={{ backgroundColor: 'var(--primary)' }}></div>
-        <div className="absolute bottom-20 left-20 w-96 h-96 rounded-full blur-3xl" style={{ backgroundColor: 'var(--primary-dark)' }}></div>
+      {/* Анимированная сетка на фоне */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0" style={{
+          backgroundImage: 'linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)',
+          backgroundSize: '50px 50px',
+          animation: 'gridMove 20s linear infinite'
+        }}></div>
+      </div>
+
+      {/* Летающие частицы */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-blue-500 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animation: `float${(i % 3) + 1} ${8 + Math.random() * 8}s ease-in-out infinite`,
+              animationDelay: `${Math.random() * 5}s`,
+              opacity: 0.3 + Math.random() * 0.4
+            }}
+          ></div>
+        ))}
+      </div>
+
+      {/* Вращающиеся кольца */}
+      <div className="absolute top-1/4 left-10 w-64 h-64 opacity-20 pointer-events-none">
+        <div className="absolute inset-0 border-2 border-blue-500 rounded-full animate-spin-slow"></div>
+        <div className="absolute inset-8 border-2 border-red-500 rounded-full" style={{ animation: 'spin-reverse 15s linear infinite' }}></div>
+      </div>
+      <div className="absolute bottom-1/4 right-10 w-48 h-48 opacity-20 pointer-events-none">
+        <div className="absolute inset-0 border-2 border-red-500 rounded-full" style={{ animation: 'spin-reverse 12s linear infinite' }}></div>
+        <div className="absolute inset-6 border-2 border-blue-500 rounded-full animate-spin-slow"></div>
+      </div>
+
+      {/* Волны энергии */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-32 pointer-events-none">
+        <div className="absolute inset-0 opacity-30" style={{
+          background: 'radial-gradient(ellipse at center, rgba(59, 130, 246, 0.3) 0%, transparent 70%)',
+          animation: 'pulse-wave 4s ease-in-out infinite'
+        }}></div>
       </div>
 
       <div className="container mx-auto px-2 sm:px-4 relative z-10">
@@ -170,6 +208,99 @@ const Advantages = () => {
           </div>
         </div>
       </div>
+
+      <style>{`
+        @keyframes gridMove {
+          0% {
+            transform: translate(0, 0);
+          }
+          100% {
+            transform: translate(50px, 50px);
+          }
+        }
+
+        @keyframes float1 {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+            opacity: 0.3;
+          }
+          25% {
+            transform: translate(30px, -50px) scale(1.2);
+            opacity: 0.7;
+          }
+          50% {
+            transform: translate(-20px, -100px) scale(0.8);
+            opacity: 0.5;
+          }
+          75% {
+            transform: translate(40px, -70px) scale(1.1);
+            opacity: 0.6;
+          }
+        }
+
+        @keyframes float2 {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+            opacity: 0.4;
+          }
+          33% {
+            transform: translate(-40px, -60px) scale(1.3);
+            opacity: 0.8;
+          }
+          66% {
+            transform: translate(35px, -90px) scale(0.9);
+            opacity: 0.5;
+          }
+        }
+
+        @keyframes float3 {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+            opacity: 0.35;
+          }
+          40% {
+            transform: translate(50px, -80px) scale(1.4);
+            opacity: 0.75;
+          }
+          80% {
+            transform: translate(-30px, -110px) scale(0.85);
+            opacity: 0.55;
+          }
+        }
+
+        @keyframes spin-reverse {
+          from {
+            transform: rotate(360deg);
+          }
+          to {
+            transform: rotate(0deg);
+          }
+        }
+
+        @keyframes pulse-wave {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.3;
+          }
+          50% {
+            transform: scale(1.5);
+            opacity: 0.1;
+          }
+        }
+
+        .animate-spin-slow {
+          animation: spin 20s linear infinite;
+        }
+
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </section>
   );
 };

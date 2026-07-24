@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useYandexMetrika } from '../hooks/useYandexMetrika';
 
 const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isVisible, setIsVisible] = useState(false);
+  const { trackButtonClick } = useYandexMetrika();
 
   // Динамический расчет количества лет работы (с 2016 года)
   const startYear = 2016;
@@ -28,7 +30,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative h-screen md:min-h-screen flex items-center justify-center bg-black overflow-hidden pt-16 sm:pt-20 md:pt-24">
+    <section className="relative min-h-screen md:h-screen flex items-center justify-center bg-black overflow-hidden pt-16 sm:pt-20 md:pt-24 pb-8 md:pb-0">
       {/* Фоновое изображение с элегантным параллаксом */}
       <div className="absolute inset-0">
         {/* На мобильных - плавающая анимация */}
@@ -36,7 +38,7 @@ const Hero = () => {
           className="md:hidden absolute inset-0 bg-center"
           style={{
             backgroundImage: 'url(/000-144.jpg)',
-            backgroundSize: 'auto 100%',
+            backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
             animation: 'slideBackground 30s ease-in-out infinite',
           }}
@@ -52,8 +54,8 @@ const Hero = () => {
           }}
         ></div>
 
-        {/* Легкое затемнение на мобильных, более темное на десктопе */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-black/40 md:from-black/75 md:via-black/45 md:to-black/85"></div>
+        {/* Черный фон как на сайте */}
+        <div className="absolute inset-0 bg-black"></div>
 
         {/* Тонкий светящийся акцент */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 opacity-50" style={{ background: 'linear-gradient(to right, transparent, var(--primary), transparent)' }}></div>
@@ -82,8 +84,8 @@ const Hero = () => {
       <div className="container mx-auto px-2 sm:px-4 relative z-10 h-full flex flex-col justify-between md:block md:h-auto">
         {/* Заголовок вверху */}
         <div className="max-w-6xl mx-auto">
-          {/* Логотип с утонченным эффектом - скрыт на мобильных */}
-          <div className={`hidden md:flex justify-center mb-6 sm:mb-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
+          {/* Логотип с утонченным эффектом - показываем на всех экранах */}
+          <div className={`flex justify-center mb-3 sm:mb-6 md:mb-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-10'}`}>
             <div
               className="relative"
               style={{
@@ -91,70 +93,101 @@ const Hero = () => {
                 transition: 'transform 0.3s ease-out',
               }}
             >
-              <div className="absolute inset-0 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'rgba(var(--primary-rgb), 0.3)', animationDuration: '4s' }}></div>
-              <img
-                src="/лого 1 без фона.svg"
-                alt="Безопасный АвтоПодбор"
-                className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 object-contain"
-                style={{
-                  filter: `drop-shadow(0 0 30px rgba(var(--primary-rgb), 0.6))`,
-                }}
-              />
+              <div className="car-with-effects">
+                <img
+                  src="/лого 1 без фона.svg"
+                  alt="Безопасный АвтоПодбор"
+                  className="relative w-48 h-48 sm:w-60 sm:h-60 md:w-96 md:h-96 object-contain car-image"
+                />
+
+                {/* След от фар */}
+                <div className="headlight-trail"></div>
+
+                {/* Дым/пыль */}
+                <div className="smoke-container">
+                  {[...Array(10)].map((_, i) => (
+                    <div
+                      key={i}
+                      className="smoke-particle"
+                      style={{
+                        animationDelay: `${i * 0.15}s`,
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
-
-          {/* Стильный заголовок */}
-          <div className={`text-center mb-0 md:mb-8 sm:md:mb-12 pt-8 md:pt-0 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-2 sm:mb-3 tracking-tight">
-              <span className="block mb-1 sm:mb-2">Безопасный</span>
-              <span className="block bg-clip-text text-transparent" style={{ backgroundImage: 'linear-gradient(to right, var(--primary), var(--primary-light), var(--primary))' }}>
-                АвтоПодбор
-              </span>
+          {/* Текст под логотипом */}
+          <div className={`text-center mb-6 sm:mb-8 md:mb-10 transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white">
+              Автоподбор в Москве и МО
             </h1>
-            <p className="text-lg sm:text-2xl md:text-3xl text-gray-300 font-light tracking-wide mt-4 sm:mt-6 px-2">
-              Подбор автомобилей под ключ
-            </p>
-            <div className="w-12 sm:w-16 h-0.5 bg-[var(--primary)] mx-auto mt-4 sm:mt-6"></div>
           </div>
 
-          {/* Минималистичные карточки преимуществ - скрыты на мобильных */}
-          <div className={`hidden md:grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-6 mb-8 sm:mb-12 transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            {[
-              { number: `${yearsInBusiness}+`, text: 'Лет опыта', subtext: 'На рынке' },
-              { number: '3', text: 'Вида гарантии', subtext: 'На услуги' },
-              { number: '500+', text: 'Клиентов', subtext: 'Довольны выбором' },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="group relative bg-black/30 backdrop-blur-[2px] md:backdrop-blur-sm border border-gray-800/50 rounded-lg p-4 sm:p-6 transition-all duration-500"
-                style={{
-                  transform: `translateY(${mousePosition.y * 0.05}px)`,
-                  transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(var(--primary-rgb), 0.5)'}
-                onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(31, 41, 55, 0.5)'}
-              >
-                <div className="text-center">
-                  <div className="text-3xl sm:text-4xl md:text-5xl font-bold text-[var(--primary)] mb-1 sm:mb-2 group-hover:scale-110 transition-transform duration-300">
-                    {item.number}
+          {/* Стильный заголовок - убран */}
+
+          {/* Минималистичные карточки преимуществ - показываем на всех экранах */}
+          <div className={`transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-6 mb-4 sm:mb-8 md:mb-12">
+              {[
+                { number: '3', text: 'Вида гарантии', subtext: 'На услуги' },
+                { number: `${yearsInBusiness}+`, text: 'Лет опыта', subtext: 'На рынке' },
+                { number: '100+', text: 'Параметров проверки', subtext: 'Комплексная диагностика' },
+                { number: '500+', text: 'Клиентов', subtext: 'Довольны выбором' },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className={`group relative bg-black/30 backdrop-blur-[2px] md:backdrop-blur-sm border border-gray-800/50 rounded-lg transition-all duration-500 flex items-center justify-center ${i >= 2 ? 'col-span-2 md:col-span-1' : ''} ${i >= 2 ? 'max-w-md mx-auto w-full md:max-w-none' : ''}`}
+                  style={{
+                    transform: `translateY(${mousePosition.y * 0.05}px)`,
+                    transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+                    padding: 'clamp(8px, 2vw, 24px)',
+                    minHeight: 'clamp(90px, 15vh, 140px)',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(var(--primary-rgb), 0.5)'}
+                  onMouseLeave={(e) => e.currentTarget.style.borderColor = 'rgba(31, 41, 55, 0.5)'}
+                >
+                  <div className="text-center w-full">
+                    <div
+                      className="font-bold text-[var(--primary)] group-hover:scale-110 transition-transform duration-300"
+                      style={{
+                        fontSize: 'clamp(1.5rem, 4vw, 3rem)',
+                        marginBottom: 'clamp(4px, 1vh, 8px)',
+                      }}
+                    >
+                      {item.number}
+                    </div>
+                    <div
+                      className="text-white font-medium"
+                      style={{
+                        fontSize: 'clamp(0.875rem, 2vw, 1.125rem)',
+                        marginBottom: 'clamp(2px, 0.5vh, 4px)',
+                      }}
+                    >{item.text}</div>
+                    <div
+                      className="text-gray-400"
+                      style={{
+                        fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
+                      }}
+                    >{item.subtext}</div>
                   </div>
-                  <div className="text-base sm:text-lg text-white font-medium mb-0.5 sm:mb-1">{item.text}</div>
-                  <div className="text-xs sm:text-sm text-gray-400">{item.subtext}</div>
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" style={{ background: 'linear-gradient(to top, rgba(var(--primary-rgb), 0.05), transparent)' }}></div>
                 </div>
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" style={{ background: 'linear-gradient(to top, rgba(var(--primary-rgb), 0.05), transparent)' }}></div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Кнопки внизу */}
         <div className="max-w-6xl mx-auto w-full">
           {/* Элегантные кнопки */}
-          <div className={`flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center pb-8 md:pb-0 md:mb-6 sm:md:mb-8 px-2 transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`flex flex-col sm:flex-row gap-2 sm:gap-3 md:gap-4 justify-center items-stretch sm:items-center pb-6 sm:pb-8 md:pb-0 md:mb-6 sm:md:mb-8 px-2 transition-all duration-1000 delay-600 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <Link
               to="/form"
-              className="group relative px-6 py-3 sm:px-10 sm:py-4 bg-[var(--primary)] text-white text-sm sm:text-base font-semibold rounded-md overflow-hidden transition-all duration-300 cursor-pointer"
+              onClick={() => trackButtonClick('Заказать подбор', 'hero')}
+              className="group relative px-5 py-2.5 sm:px-6 sm:py-3 md:px-10 md:py-4 bg-[var(--primary)] text-white text-sm sm:text-base font-semibold rounded-md overflow-hidden transition-all duration-300 cursor-pointer"
               style={{
                 boxShadow: '0 10px 15px -3px rgba(var(--primary-rgb), 0.5)'
               }}
@@ -175,8 +208,11 @@ const Hero = () => {
             </Link>
 
             <button
-              onClick={() => scrollToSection('pricing')}
-              className="group px-6 py-3 sm:px-10 sm:py-4 bg-transparent border-2 border-white text-white text-sm sm:text-base font-semibold rounded-md hover:bg-white hover:text-black transition-all duration-300 cursor-pointer"
+              onClick={() => {
+                scrollToSection('pricing');
+                trackButtonClick('Узнать стоимость', 'hero');
+              }}
+              className="group px-5 py-2.5 sm:px-6 sm:py-3 md:px-10 md:py-4 bg-transparent border-2 border-white text-white text-sm sm:text-base font-semibold rounded-md hover:bg-white hover:text-black transition-all duration-300 cursor-pointer"
             >
               <span className="flex items-center justify-center gap-2">
                 <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -215,44 +251,6 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Элегантная стрелка вниз - скрыта на мобильных */}
-      <button
-        onClick={() => scrollToSection('about')}
-        className="hidden md:block absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 group cursor-pointer z-20 pointer-events-auto"
-        aria-label="Прокрутить к следующей секции"
-      >
-        <div className="relative">
-          {/* Пульсирующий круг-подсветка */}
-          <div className="absolute inset-0 rounded-full blur-xl animate-pulse transition-all duration-500" style={{ backgroundColor: 'rgba(var(--primary-rgb), 0.2)', animationDuration: '3s' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(var(--primary-rgb), 0.4)'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(var(--primary-rgb), 0.2)'}></div>
-
-          {/* Внешний круг с градиентом */}
-          <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-sm border border-white/20 transition-all duration-500 flex items-center justify-center group-hover:scale-110" style={{ boxShadow: '0 0 0 0 rgba(var(--primary-rgb), 0.3)' }} onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(var(--primary-rgb), 0.8)'; e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(var(--primary-rgb), 0.3)'; }} onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)'; e.currentTarget.style.boxShadow = '0 0 0 0 rgba(var(--primary-rgb), 0.3)'; }}>
-            {/* Внутренний светящийся круг */}
-            <div className="absolute inset-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ background: 'linear-gradient(to bottom right, rgba(var(--primary-rgb), 0.1), transparent)' }}></div>
-
-            {/* Стрелка с улучшенной анимацией */}
-            <svg
-              className="w-5 h-5 sm:w-6 sm:h-6 text-white transition-all duration-300 relative z-10"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              style={{
-                animation: 'smoothBounce 2.5s ease-in-out infinite',
-                filter: `drop-shadow(0 0 8px rgba(var(--primary-rgb), 0.3))`
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary-light)'}
-              onMouseLeave={(e) => e.currentTarget.style.color = 'white'}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
-          </div>
-
-          {/* Декоративные частицы вокруг */}
-          <div className="absolute -inset-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div className="absolute top-0 left-1/2 w-1 h-1 rounded-full -translate-x-1/2 animate-ping" style={{ backgroundColor: 'var(--primary-light)' }}></div>
-          </div>
-        </div>
-      </button>
 
       <style>{`
         @keyframes gentleFloat {
@@ -286,6 +284,100 @@ const Hero = () => {
             background-position: right center;
           }
         }
+
+        /* Контейнер машины с эффектами */
+        .car-with-effects {
+          position: relative;
+          animation: carDrive 8s ease-in-out infinite;
+        }
+
+        /* Машина внутри */
+        .car-image {
+          position: relative;
+          z-index: 10;
+        }
+
+        @keyframes carDrive {
+          0% {
+            transform: translateX(-100vw) translateY(0) scale(0.8);
+          }
+          15% {
+            transform: translateX(-20vw) translateY(-5px) scale(1);
+          }
+          50% {
+            transform: translateX(0) translateY(0) scale(1);
+          }
+          85% {
+            transform: translateX(20vw) translateY(-5px) scale(1);
+          }
+          100% {
+            transform: translateX(100vw) translateY(0) scale(0.8);
+          }
+        }
+
+        /* СЛЕД ОТ ФАР - желто-белый, спереди машины */
+        .headlight-trail {
+          position: absolute;
+          right: -50px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 200px;
+          height: 80px;
+          background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 230, 150, 0.2),
+            rgba(255, 255, 255, 0.3),
+            rgba(255, 230, 150, 0.4));
+          filter: blur(20px);
+          animation: trailPulse 2s ease-in-out infinite;
+          pointer-events: none;
+          z-index: 5;
+        }
+
+        @keyframes trailPulse {
+          0%, 100% {
+            opacity: 0.7;
+            filter: blur(25px);
+          }
+          50% {
+            opacity: 0.4;
+            filter: blur(20px);
+          }
+        }
+
+        /* ДЫМ/ПЫЛЬ - серый, позади машины */
+        .smoke-container {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          overflow: visible;
+        }
+
+        .smoke-particle {
+          position: absolute;
+          left: 20%;
+          top: 55%;
+          width: 50px;
+          height: 50px;
+          background: radial-gradient(circle, rgba(150, 150, 150, 0.4), rgba(180, 180, 180, 0.2), transparent);
+          border-radius: 50%;
+          animation: smokeDrift 2s ease-out infinite;
+        }
+
+        @keyframes smokeDrift {
+          0% {
+            transform: translate(0, 0) scale(0.5);
+            opacity: 0.7;
+          }
+          100% {
+            transform: translate(-400px, 60px) scale(2.5);
+            opacity: 0;
+          }
+        }
+
       `}</style>
     </section>
   );

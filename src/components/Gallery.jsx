@@ -1,19 +1,17 @@
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { EffectCoverflow, EffectCards, EffectCreative, Navigation, Pagination, Autoplay } from 'swiper/modules';
+import { Pagination, EffectCoverflow, EffectCards } from 'swiper/modules';
 
 // Импорт стилей Swiper
 import 'swiper/css';
+import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
 import 'swiper/css/effect-cards';
-import 'swiper/css/effect-creative';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 
 const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const originalImages = [
+  const images = [
     { src: '/000-112.jpg', alt: 'Специалист проводит осмотр автомобиля при подборе' },
     { src: '/000-115.jpg', alt: 'Детальная проверка технического состояния машины' },
     { src: '/000-127.jpg', alt: 'Диагностика автомобиля перед покупкой в Минске' },
@@ -27,11 +25,6 @@ const Gallery = () => {
     { src: '/000-33.jpg', alt: 'Проверка ходовой части и подвески автомобиля' },
     { src: '/000-4.jpg', alt: 'Измерение толщины лакокрасочного покрытия толщиномером' }
   ];
-
-  // Рандомизируем порядок фотографий при каждой загрузке
-  const images = useMemo(() => {
-    return [...originalImages].sort(() => Math.random() - 0.5);
-  }, []);
 
   const nextImage = () => {
     if (!selectedImage) return;
@@ -48,11 +41,68 @@ const Gallery = () => {
   };
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 bg-black relative overflow-hidden">
-      {/* Фоновые эффекты */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'var(--primary)' }}></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600 rounded-full blur-3xl animate-pulse" style={{ backgroundColor: 'var(--primary)', animationDelay: '2s' }}></div>
+    <section className="py-12 sm:py-16 md:py-20 relative overflow-hidden" style={{ backgroundColor: '#0a0a0a' }}>
+      {/* Реалистичный туман на чёрном фоне */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Большое облако тумана слева */}
+        <div
+          className="absolute w-[600px] h-[600px]"
+          style={{
+            top: '10%',
+            left: '-10%',
+            background: 'radial-gradient(circle, rgba(60, 75, 95, 0.6) 0%, rgba(50, 65, 85, 0.4) 35%, rgba(40, 55, 75, 0.2) 60%, transparent 80%)',
+            filter: 'blur(60px)',
+            animation: 'fogFloat1 15s ease-in-out infinite'
+          }}
+        ></div>
+
+        {/* Большое облако тумана справа */}
+        <div
+          className="absolute w-[700px] h-[700px]"
+          style={{
+            top: '40%',
+            right: '-15%',
+            background: 'radial-gradient(circle, rgba(55, 70, 90, 0.65) 0%, rgba(45, 60, 80, 0.45) 35%, rgba(35, 50, 70, 0.25) 60%, transparent 80%)',
+            filter: 'blur(70px)',
+            animation: 'fogFloat2 18s ease-in-out infinite'
+          }}
+        ></div>
+
+        {/* Центральное облако тумана */}
+        <div
+          className="absolute w-[800px] h-[600px]"
+          style={{
+            top: '25%',
+            left: '30%',
+            background: 'radial-gradient(ellipse, rgba(65, 80, 100, 0.55) 0%, rgba(55, 70, 90, 0.35) 40%, rgba(45, 60, 80, 0.15) 65%, transparent 85%)',
+            filter: 'blur(80px)',
+            animation: 'fogFloat3 20s ease-in-out infinite'
+          }}
+        ></div>
+
+        {/* Нижнее облако тумана */}
+        <div
+          className="absolute w-[650px] h-[650px]"
+          style={{
+            bottom: '-10%',
+            left: '20%',
+            background: 'radial-gradient(circle, rgba(50, 65, 85, 0.6) 0%, rgba(40, 55, 75, 0.4) 35%, rgba(30, 45, 65, 0.2) 60%, transparent 80%)',
+            filter: 'blur(75px)',
+            animation: 'fogFloat1 22s ease-in-out infinite reverse'
+          }}
+        ></div>
+
+        {/* Верхнее облако тумана */}
+        <div
+          className="absolute w-[550px] h-[550px]"
+          style={{
+            top: '-5%',
+            right: '25%',
+            background: 'radial-gradient(circle, rgba(60, 75, 95, 0.5) 0%, rgba(50, 65, 85, 0.3) 40%, rgba(40, 55, 75, 0.15) 65%, transparent 80%)',
+            filter: 'blur(65px)',
+            animation: 'fogFloat2 16s ease-in-out infinite reverse'
+          }}
+        ></div>
       </div>
 
       <div className="container mx-auto px-2 sm:px-4 relative z-10">
@@ -67,34 +117,38 @@ const Gallery = () => {
           </p>
         </div>
 
-        {/* Карусель Cards эффект на мобильных (как стопка карт) */}
+        {/* Cards эффект на мобильных - оптимизированный */}
         <div className="md:hidden mb-8">
           <Swiper
             effect="cards"
             grabCursor={true}
-            loop={true}
             modules={[EffectCards, Pagination]}
-            className="mySwiper"
             cardsEffect={{
               perSlideOffset: 8,
               perSlideRotate: 2,
               rotate: true,
-              slideShadows: true,
+              slideShadows: false,
             }}
+            speed={400}
+            touchRatio={1.5}
+            threshold={10}
+            resistance={true}
+            resistanceRatio={0.5}
             pagination={{
               clickable: true,
-              dynamicBullets: true,
+              dynamicBullets: false,
             }}
+            className="mySwiper"
           >
             {images.map((image, index) => (
               <SwiperSlide key={index}>
-                <div
-                  className="relative h-[450px] rounded-2xl overflow-hidden group"
-                >
+                <div className="relative h-[450px] rounded-xl overflow-hidden bg-gray-900">
                   <img
                     src={image.src}
                     alt={image.alt}
                     className="w-full h-full object-cover"
+                    loading={index < 2 ? "eager" : "lazy"}
+                    decoding="async"
                   />
                 </div>
               </SwiperSlide>
@@ -110,6 +164,7 @@ const Gallery = () => {
             centeredSlides={true}
             slidesPerView="auto"
             loop={true}
+            speed={400}
             coverflowEffect={{
               rotate: 50,
               stretch: 0,
@@ -121,12 +176,7 @@ const Gallery = () => {
               clickable: true,
               dynamicBullets: true,
             }}
-            navigation={true}
-            autoplay={{
-              delay: 3500,
-              disableOnInteraction: false,
-            }}
-            modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
+            modules={[EffectCoverflow, Pagination]}
             className="coverflowSwiper"
           >
             {images.map((image, index) => (
@@ -252,36 +302,17 @@ const Gallery = () => {
         .swiper-pagination-bullet {
           background: #666;
           opacity: 0.5;
+          width: 12px;
+          height: 12px;
         }
 
         .swiper-pagination-bullet-active {
           background: var(--primary);
           opacity: 1;
+          width: 12px;
+          height: 12px;
         }
 
-        /* Кастомизация навигации */
-        .swiper-button-next,
-        .swiper-button-prev {
-          color: var(--primary);
-          background: rgba(0, 0, 0, 0.5);
-          backdrop-filter: blur(10px);
-          width: 50px;
-          height: 50px;
-          border-radius: 50%;
-          transition: all 0.3s;
-        }
-
-        .swiper-button-next:hover,
-        .swiper-button-prev:hover {
-          background: var(--primary);
-          color: white;
-          transform: scale(1.1);
-        }
-
-        .swiper-button-next:after,
-        .swiper-button-prev:after {
-          font-size: 20px;
-        }
 
         /* Анимации для модального окна */
         @keyframes fadeIn {
@@ -310,6 +341,60 @@ const Gallery = () => {
 
         .animate-zoomIn {
           animation: zoomIn 0.3s ease-out;
+        }
+
+        /* Анимации тумана - очень заметные */
+        @keyframes fogFloat1 {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+            opacity: 1;
+          }
+          25% {
+            transform: translate(150px, -120px) scale(1.4);
+            opacity: 0.7;
+          }
+          50% {
+            transform: translate(80px, 100px) scale(0.75);
+            opacity: 1;
+          }
+          75% {
+            transform: translate(-140px, 60px) scale(1.3);
+            opacity: 0.65;
+          }
+        }
+
+        @keyframes fogFloat2 {
+          0%, 100% {
+            transform: translate(0, 0) scale(1);
+            opacity: 1;
+          }
+          30% {
+            transform: translate(-180px, 130px) scale(1.5);
+            opacity: 0.8;
+          }
+          60% {
+            transform: translate(120px, -150px) scale(0.7);
+            opacity: 0.75;
+          }
+          85% {
+            transform: translate(-80px, -70px) scale(1.35);
+            opacity: 0.9;
+          }
+        }
+
+        @keyframes fogFloat3 {
+          0%, 100% {
+            transform: translate(0, 0) scale(1) rotate(0deg);
+            opacity: 1;
+          }
+          33% {
+            transform: translate(160px, -170px) scale(1.6) rotate(15deg);
+            opacity: 0.65;
+          }
+          66% {
+            transform: translate(-150px, 140px) scale(0.8) rotate(-15deg);
+            opacity: 0.85;
+          }
         }
       `}</style>
     </section>

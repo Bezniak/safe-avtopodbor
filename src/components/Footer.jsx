@@ -1,10 +1,12 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Send, ShoppingBag, MessageCircle } from 'lucide-react'
+import { useYandexMetrika } from '../hooks/useYandexMetrika'
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const location = useLocation();
   const navigate = useNavigate();
+  const { trackPhoneClick, trackButtonClick, trackSocialClick } = useYandexMetrika();
 
   // Динамический расчет количества лет работы (с 2016 года)
   const startYear = 2016;
@@ -57,6 +59,7 @@ const Footer = () => {
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center mb-6 sm:mb-8">
                   <Link
                     to="/form"
+                    onClick={() => trackButtonClick('Оставить заявку', 'footer_cta')}
                     className="text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg font-semibold transition-all transform hover:scale-105 shadow-lg cursor-pointer"
                     style={{ backgroundColor: 'var(--primary)', boxShadow: '0 10px 15px -3px rgba(var(--primary-rgb), 0.5)' }}
                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--primary-dark)'}
@@ -66,6 +69,7 @@ const Footer = () => {
                   </Link>
                   <a
                     href="tel:+79932882809"
+                    onClick={() => trackPhoneClick('+79932882809')}
                     className="bg-transparent border-2 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-full text-base sm:text-lg font-semibold transition-all transform hover:scale-105 cursor-pointer"
                     style={{ borderColor: 'var(--primary)' }}
                     onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--primary)'}
@@ -123,6 +127,7 @@ const Footer = () => {
                   href="https://vk.com/carchoiespro"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackSocialClick('vk')}
                   className="w-9 h-9 sm:w-10 sm:h-10 bg-gray-800 hover:bg-[var(--primary)] rounded-full flex items-center justify-center transition-colors cursor-pointer"
                   aria-label="Наша группа ВКонтакте"
                 >
@@ -132,6 +137,7 @@ const Footer = () => {
                   href="https://t.me/avtomobill444"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackSocialClick('telegram')}
                   className="w-9 h-9 sm:w-10 sm:h-10 bg-gray-800 hover:bg-[var(--primary)] rounded-full flex items-center justify-center transition-colors cursor-pointer"
                   aria-label="Написать нам в Telegram"
                 >
@@ -141,6 +147,7 @@ const Footer = () => {
                   href="https://www.avito.ru/user/49ba00a75f83ff17979a4b51674d2928/profile/all/predlozheniya_uslug"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => trackSocialClick('avito')}
                   className="px-2.5 sm:px-3 h-9 sm:h-10 bg-gray-800 hover:bg-[var(--primary)] rounded-full flex items-center justify-center transition-colors cursor-pointer"
                   aria-label="Наши услуги на Avito"
                 >
@@ -215,6 +222,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="tel:+79932882809"
+                    onClick={() => trackPhoneClick('+79932882809')}
                     className="text-gray-400 hover:text-[var(--primary)] transition-colors flex items-center cursor-pointer"
                   >
                     <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -239,7 +247,7 @@ const Footer = () => {
                   <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5 sm:mr-2 mt-0.5 sm:mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                   </svg>
-                  Москва, Лубянский проезд
+                  Москва, ул. Севанская, д. 15, корп. 1, офис 11
                 </li>
                 <li className="text-gray-400 text-xs sm:text-sm ml-5 sm:ml-7">
                   Работаем круглосуточно 24/7
@@ -266,7 +274,7 @@ const Footer = () => {
                   href="https://akramedia.by/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-lg sm:text-xl font-bold text-white hover:text-[var(--primary)] transition-all duration-300 flex items-center gap-1.5 sm:gap-2 group"
+                  className="text-lg sm:text-xl font-bold uppercase text-white hover:text-[var(--primary)] transition-all duration-300 flex items-center gap-1.5 sm:gap-2 group"
                 >
                   Akra Media
                   <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

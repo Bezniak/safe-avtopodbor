@@ -1,14 +1,158 @@
+import { useEffect, useRef, useState } from 'react';
+
 const About = () => {
   // Динамический расчет количества лет работы (с 2016 года)
   const startYear = 2016;
   const currentYear = new Date().getFullYear();
   const yearsInBusiness = currentYear - startYear;
 
+  const sectionRef = useRef(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!sectionRef.current) return;
+
+      const section = sectionRef.current;
+      const rect = section.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      // Вычисляем прогресс скролла через секцию (от 0 до 1)
+      const sectionTop = rect.top;
+      const sectionHeight = rect.height;
+
+      // Начинаем анимацию когда секция входит в viewport
+      if (sectionTop < windowHeight && sectionTop + sectionHeight > 0) {
+        const progress = Math.max(0, Math.min(1, (windowHeight - sectionTop) / (windowHeight + sectionHeight)));
+        setScrollProgress(progress);
+      } else if (sectionTop >= windowHeight) {
+        setScrollProgress(0);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Первоначальный вызов
+
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <section id="about" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-b from-black to-gray-900 relative overflow-hidden">
+    <section ref={sectionRef} id="about" className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-gradient-to-b from-black to-gray-900 relative overflow-hidden">
       {/* Фоновые элементы */}
       <div className="absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl" style={{ backgroundColor: 'rgba(var(--primary-rgb), 0.05)' }}></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full blur-3xl" style={{ backgroundColor: 'rgba(var(--primary-rgb), 0.05)' }}></div>
+
+      {/* Горизонтальные полоски слева - разной длины и толщины */}
+      <div
+        className="absolute left-0 bg-gradient-to-r from-blue-500 via-blue-400 to-transparent transition-all duration-700"
+        style={{
+          top: '10%',
+          height: '2px',
+          width: scrollProgress > 0.2 ? '15%' : '0%',
+          opacity: scrollProgress > 0.2 ? 0.8 : 0
+        }}
+      ></div>
+      <div
+        className="absolute left-0 bg-gradient-to-r from-blue-600 via-blue-500 to-transparent transition-all duration-700 delay-100"
+        style={{
+          top: '25%',
+          height: '8px',
+          width: scrollProgress > 0.3 ? '55%' : '0%',
+          opacity: scrollProgress > 0.3 ? 0.7 : 0
+        }}
+      ></div>
+      <div
+        className="absolute left-0 bg-gradient-to-r from-blue-400 via-blue-300 to-transparent transition-all duration-700 delay-200"
+        style={{
+          top: '40%',
+          height: '4px',
+          width: scrollProgress > 0.4 ? '22%' : '0%',
+          opacity: scrollProgress > 0.4 ? 0.9 : 0
+        }}
+      ></div>
+      <div
+        className="absolute left-0 bg-gradient-to-r from-blue-500 via-blue-400 to-transparent transition-all duration-700 delay-300"
+        style={{
+          top: '55%',
+          height: '12px',
+          width: scrollProgress > 0.5 ? '48%' : '0%',
+          opacity: scrollProgress > 0.5 ? 0.6 : 0
+        }}
+      ></div>
+      <div
+        className="absolute left-0 bg-gradient-to-r from-blue-300 via-blue-400 to-transparent transition-all duration-700 delay-400"
+        style={{
+          top: '70%',
+          height: '5px',
+          width: scrollProgress > 0.5 ? '18%' : '0%',
+          opacity: scrollProgress > 0.5 ? 0.75 : 0
+        }}
+      ></div>
+      <div
+        className="absolute left-0 bg-gradient-to-r from-blue-600 via-blue-500 to-transparent transition-all duration-700 delay-500"
+        style={{
+          top: '85%',
+          height: '7px',
+          width: scrollProgress > 0.6 ? '60%' : '0%',
+          opacity: scrollProgress > 0.6 ? 0.65 : 0
+        }}
+      ></div>
+
+      {/* Горизонтальные полоски справа - разной длины и толщины */}
+      <div
+        className="absolute right-0 bg-gradient-to-l from-blue-500 via-blue-400 to-transparent transition-all duration-700 delay-150"
+        style={{
+          top: '15%',
+          height: '5px',
+          width: scrollProgress > 0.2 ? '45%' : '0%',
+          opacity: scrollProgress > 0.2 ? 0.8 : 0
+        }}
+      ></div>
+      <div
+        className="absolute right-0 bg-gradient-to-l from-blue-600 via-blue-500 to-transparent transition-all duration-700 delay-250"
+        style={{
+          top: '30%',
+          height: '10px',
+          width: scrollProgress > 0.3 ? '20%' : '0%',
+          opacity: scrollProgress > 0.3 ? 0.7 : 0
+        }}
+      ></div>
+      <div
+        className="absolute right-0 bg-gradient-to-l from-blue-400 via-blue-300 to-transparent transition-all duration-700 delay-350"
+        style={{
+          top: '48%',
+          height: '3px',
+          width: scrollProgress > 0.4 ? '52%' : '0%',
+          opacity: scrollProgress > 0.4 ? 0.9 : 0
+        }}
+      ></div>
+      <div
+        className="absolute right-0 bg-gradient-to-l from-blue-500 via-blue-400 to-transparent transition-all duration-700 delay-400"
+        style={{
+          top: '62%',
+          height: '6px',
+          width: scrollProgress > 0.5 ? '25%' : '0%',
+          opacity: scrollProgress > 0.5 ? 0.6 : 0
+        }}
+      ></div>
+      <div
+        className="absolute right-0 bg-gradient-to-l from-blue-300 via-blue-400 to-transparent transition-all duration-700 delay-500"
+        style={{
+          top: '77%',
+          height: '9px',
+          width: scrollProgress > 0.5 ? '58%' : '0%',
+          opacity: scrollProgress > 0.5 ? 0.7 : 0
+        }}
+      ></div>
+      <div
+        className="absolute right-0 bg-gradient-to-l from-blue-600 via-blue-500 to-transparent transition-all duration-700 delay-550"
+        style={{
+          top: '92%',
+          height: '4px',
+          width: scrollProgress > 0.6 ? '30%' : '0%',
+          opacity: scrollProgress > 0.6 ? 0.8 : 0
+        }}
+      ></div>
 
       <div className="container mx-auto px-2 sm:px-4">
         <div className="max-w-6xl mx-auto">

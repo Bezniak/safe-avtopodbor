@@ -9,6 +9,7 @@ import ErrorBoundary from './components/ErrorBoundary'
 const HomePage = lazy(() => import('./pages/HomePage'))
 const ContactPage = lazy(() => import('./pages/ContactPage'))
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'))
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 const CookieBanner = lazy(() => import('./components/CookieBanner'))
 
 // Компонент загрузки для Suspense
@@ -31,6 +32,20 @@ function ScrollToTop() {
       left: 0,
       behavior: 'instant' // Мгновенная прокрутка при смене страницы
     })
+
+    // Отправка хита в Яндекс.Метрику при смене страницы (для SPA)
+    if (typeof window !== 'undefined' && window.ym) {
+      window.ym(105138555, 'hit', window.location.href);
+      console.log('[Яндекс.Метрика] Отправлен хит:', window.location.href);
+    }
+
+    // Отправка pageview в Google Analytics при смене страницы
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('config', 'G-YZCJNB5SQ5', {
+        page_path: pathname
+      });
+      console.log('[GA4] Отправлен pageview:', pathname);
+    }
   }, [pathname])
 
   return null
@@ -60,6 +75,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/form" element={<ContactPage />} />
               <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </Suspense>
           <Footer />

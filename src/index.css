@@ -99,9 +99,9 @@ body {
   cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDMyIDMyIj48cGF0aCBkPSJNNCA0IEw0IDI0IEwxMSAxNyBMMTUgMjggTDE4IDI3IEwxNCAxNiBMMjIgMTYgWiIgZmlsbD0id2hpdGUiIHN0cm9rZT0iIzI1NjNBOCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz48L3N2Zz4=') 4 4, auto;
 }
 
-/* Для интерактивных элементов - стильный круг */
+/* Для интерактивных элементов - стандартный pointer */
 a, button, [role="button"], input, textarea, select, .cursor-pointer {
-  cursor: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIxNCIgZmlsbD0iIzI1NjNBOCIgb3BhY2l0eT0iMC4yIi8+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMTAiIGZpbGw9IiMyNTYzQTgiIG9wYWNpdHk9IjAuNSIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjYiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIzIiBmaWxsPSIjMjU2M0E4Ii8+PC9zdmc+') 20 20, pointer;
+  cursor: pointer;
 }
 
 /* Для текстовых полей - курсор с синим акцентом */
